@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      target: builder # On utilise l'étape "builder" du Dockerfile qui a toutes les dépendances
+    volumes:
+      - ./server:/app/server
+      - ./client:/app/client
+    ports:
+      - "3000:3000" # On expose aussi le port du client React
+      - "3001:3001"
+    environment:
+      - NODE_ENV=development
+    command: npm run dev # On lance l'application en mode développement

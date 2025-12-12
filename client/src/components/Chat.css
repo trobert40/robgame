@@ -1,0 +1,131 @@
+.chat-container {
+  display: flex;
+  flex-direction: column;
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+  overflow: hidden;
+  max-width: 400px;
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 1000;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  transition: all 0.3s ease-in-out;
+}
+
+.chat-container.open {
+  height: 500px; /* Or adjust as needed */
+}
+
+.chat-container.closed {
+  height: 40px; /* Height of the button */
+  background-color: transparent;
+  box-shadow: none;
+}
+
+.chat-toggle-button {
+  width: 150px;
+  height: 40px;
+  border-radius: 8px 8px 0 0;
+  border: none;
+  background-color: #a3320bff; /* rust-brown */
+  color: white;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: bold;
+  transition: background-color 0.2s;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+}
+
+.chat-toggle-button:hover {
+  background-color: #6b0504ff; /* dark-garnet */
+}
+
+.chat-container.open .chat-toggle-button {
+  border-radius: 0;
+  position: relative;
+  width: 100%;
+  height: 40px;
+}
+
+
+.messages-list {
+  flex-grow: 1;
+  padding: 15px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.message-item {
+  padding: 8px 12px;
+  border-radius: 18px;
+  max-width: 80%;
+  word-wrap: break-word;
+}
+
+.message-sender {
+  font-weight: bold;
+  font-size: 0.8rem;
+  margin-bottom: 4px;
+  color: #d5e68dff; /* lime-cream */
+}
+
+.system-message {
+  align-self: center;
+  background-color: rgba(255, 255, 255, 0.2);
+  color: #d5e68dff; /* lime-cream */
+  font-style: italic;
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+.my-message {
+  align-self: flex-end;
+  background-color: #47a025ff; /* medium-jungle */
+  color: white;
+}
+
+.other-message {
+  align-self: flex-start;
+  background-color: #241023ff; /* midnight-violet */
+  color: white;
+}
+
+.message-form {
+  display: flex;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.message-input {
+  flex-grow: 1;
+  border: none;
+  background-color: rgba(0, 0, 0, 0.3);
+  padding: 15px;
+  color: white;
+  font-size: 1rem;
+}
+
+.message-input:focus {
+  outline: none;
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+.send-button {
+  border: none;
+  background-color: #a3320bff; /* rust-brown */
+  color: white;
+  padding: 0 20px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: bold;
+  transition: background-color 0.2s;
+}
+
+.send-button:hover {
+  background-color: #6b0504ff; /* dark-garnet */
+}
