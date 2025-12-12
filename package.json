@@ -3,13 +3,16 @@
   "version": "1.0.0",
   "description": "Multiplayer party game application",
   "main": "server/index.js",
+  "homepage": "https://trobert40.github.io/robgame",
   "scripts": {
     "dev": "concurrently \"npm run dev:server\" \"npm run dev:client\"",
     "dev:server": "nodemon server/index.js",
     "dev:client": "cd client && npm start",
     "build": "cd client && npm run build",
     "start": "node server/index.js",
-    "install:all": "npm install && cd client && npm install && cd .."
+    "install:all": "npm install && cd client && npm install && cd ..",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d docs"
   },
   "keywords": [
     "party",
@@ -21,14 +24,15 @@
   "author": "Théo",
   "license": "MIT",
   "dependencies": {
+    "cors": "^2.8.5",
     "express": "^4.18.2",
-    "socket.io": "^4.5.4",
-    "uuid": "^9.0.0",
     "qrcode": "^1.5.3",
-    "cors": "^2.8.5"
+    "socket.io": "^4.5.4",
+    "uuid": "^9.0.0"
   },
   "devDependencies": {
-    "nodemon": "^3.0.1",
-    "concurrently": "^8.0.1"
+    "concurrently": "^8.0.1",
+    "gh-pages": "^6.3.0",
+    "nodemon": "^3.0.1"
   }
 }
