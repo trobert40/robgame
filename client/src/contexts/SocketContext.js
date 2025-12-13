@@ -1,5 +1,5 @@
-import React, { createContext, useState, useEffect, useCallback } from 'react';
-import io from 'socket.io-client';
+import React, { createContext, useState, useEffect, useCallback } from "react";
+import io from "socket.io-client";
 
 export const SocketContext = createContext();
 
@@ -11,52 +11,64 @@ export const SocketProvider = ({ children }) => {
   const [messages, setMessages] = useState([]);
 
   useEffect(() => {
-    const newSocket = io(process.env.REACT_APP_SERVER_URL || `http://${window.location.hostname}:3001`, {
+    // Détermine l'URL : localhost si on développe, sinon l'adresse de votre VPS
+    const SERVER_URL =
+      window.location.hostname === "localhost"
+        ? "http://localhost:3001"
+        : "https://api.robgame.fr";
+
+    const newSocket = io(process.env.REACT_APP_SERVER_URL || SERVER_URL, {
       reconnection: true,
       reconnectionDelay: 1000,
       reconnectionDelayMax: 5000,
-      reconnectionAttempts: 5
+      reconnectionAttempts: 5,
     });
 
-    newSocket.on('connect', () => {
+    newSocket.on("connect", () => {
       setConnected(true);
-      console.log('Connected to server');
+      console.log("Connected to server");
     });
 
-    newSocket.on('disconnect', () => {
+    newSocket.on("disconnect", () => {
       setConnected(false);
-      console.log('Disconnected from server');
+      console.log("Disconnected from server");
     });
 
-    newSocket.on('playerJoined', (data) => {
+    newSocket.on("playerJoined", (data) => {
       setRoomData(data.roomData);
       if (data.systemMessage) {
-        setMessages(prev => [...prev, { ...data.systemMessage, type: 'system' }]);
+        setMessages((prev) => [
+          ...prev,
+          { ...data.systemMessage, type: "system" },
+        ]);
       }
     });
 
-    newSocket.on('playerLeft', (data) => {
+    newSocket.on("playerLeft", (data) => {
       setRoomData(data.roomData);
       if (data.systemMessage) {
-        setMessages(prev => [...prev, { ...data.systemMessage, type: 'system' }]);
+        setMessages((prev) => [
+          ...prev,
+          { ...data.systemMessage, type: "system" },
+        ]);
       }
     });
 
-    newSocket.on('gameStarted', (data) => {
+    newSocket.on("gameStarted", (data) => {
       setRoomData(data.roomData);
       setMessages([]); // Clear chat on game start
     });
 
-    newSocket.on('gameStateUpdated', (data) => {
-      setRoomData(data);
-    });
-    
-    newSocket.on('roomStateUpdated', (data) => {
+    newSocket.on("gameStateUpdated", (data) => {
       setRoomData(data);
     });
 
-    newSocket.on('newMessage', (messageData) => {
-      setMessages(prev => [...prev, messageData]);
+    newSocket.on("roomStateUpdated", (data) => {
+      setRoomData(data);
+    });
+
+    newSocket.on("newMessage", (messageData) => {
+      setMessages((prev) => [...prev, messageData]);
     });
 
     setSocket(newSocket);
@@ -66,51 +78,63 @@ export const SocketProvider = ({ children }) => {
     };
   }, []);
 
-  const createRoom = useCallback((playerName) => {
-    return new Promise((resolve) => {
-      socket?.emit('createRoom', playerName, (response) => {
-        if (response.success) {
-          setCurrentRoom(response.roomCode);
-          setRoomData(response.roomData);
-          setMessages([]); // Clear messages for new room
-        }
-        resolve(response);
+  const createRoom = useCallback(
+    (playerName) => {
+      return new Promise((resolve) => {
+        socket?.emit("createRoom", playerName, (response) => {
+          if (response.success) {
+            setCurrentRoom(response.roomCode);
+            setRoomData(response.roomData);
+            setMessages([]); // Clear messages for new room
+          }
+          resolve(response);
+        });
       });
-    });
-  }, [socket]);
+    },
+    [socket]
+  );
 
-  const joinRoom = useCallback((roomCode, playerName) => {
-    return new Promise((resolve) => {
-      socket?.emit('joinRoom', roomCode, playerName, (response) => {
-        if (response.success) {
-          setCurrentRoom(roomCode);
-          setRoomData(response.roomData);
-          setMessages([]); // Clear messages for new room
-        }
-        resolve(response);
+  const joinRoom = useCallback(
+    (roomCode, playerName) => {
+      return new Promise((resolve) => {
+        socket?.emit("joinRoom", roomCode, playerName, (response) => {
+          if (response.success) {
+            setCurrentRoom(roomCode);
+            setRoomData(response.roomData);
+            setMessages([]); // Clear messages for new room
+          }
+          resolve(response);
+        });
       });
-    });
-  }, [socket]);
+    },
+    [socket]
+  );
 
-  const startGame = useCallback((gameType) => {
-    return new Promise((resolve) => {
-      socket?.emit('startGame', gameType, (response) => {
-        resolve(response);
+  const startGame = useCallback(
+    (gameType) => {
+      return new Promise((resolve) => {
+        socket?.emit("startGame", gameType, (response) => {
+          resolve(response);
+        });
       });
-    });
-  }, [socket]);
+    },
+    [socket]
+  );
 
-  const sendGameAction = useCallback((action) => {
-    return new Promise((resolve) => {
-      socket?.emit('gameAction', action, (response) => {
-        resolve(response);
+  const sendGameAction = useCallback(
+    (action) => {
+      return new Promise((resolve) => {
+        socket?.emit("gameAction", action, (response) => {
+          resolve(response);
+        });
       });
-    });
-  }, [socket]);
+    },
+    [socket]
+  );
 
   const leaveRoom = useCallback(() => {
     return new Promise((resolve) => {
-      socket?.emit('leaveRoom', (response) => {
+      socket?.emit("leaveRoom", (response) => {
         if (response.success) {
           setCurrentRoom(null);
           setRoomData(null);
@@ -121,16 +145,19 @@ export const SocketProvider = ({ children }) => {
     });
   }, [socket]);
 
-  const sendMessage = useCallback((message) => {
-    return new Promise((resolve) => {
-      socket?.emit('sendMessage', message, (response) => {
-        resolve(response);
+  const sendMessage = useCallback(
+    (message) => {
+      return new Promise((resolve) => {
+        socket?.emit("sendMessage", message, (response) => {
+          resolve(response);
+        });
       });
-    });
-  }, [socket]);
+    },
+    [socket]
+  );
 
   const playAgain = useCallback(() => {
-    socket?.emit('playAgain');
+    socket?.emit("playAgain");
   }, [socket]);
 
   const value = {
@@ -145,12 +172,10 @@ export const SocketProvider = ({ children }) => {
     sendGameAction,
     leaveRoom,
     sendMessage,
-    playAgain
+    playAgain,
   };
 
   return (
-    <SocketContext.Provider value={value}>
-      {children}
-    </SocketContext.Provider>
+    <SocketContext.Provider value={value}>{children}</SocketContext.Provider>
   );
 };

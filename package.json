@@ -12,7 +12,7 @@
     "start": "node server/index.js",
     "install:all": "npm install && cd client && npm install && cd ..",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d docs"
+    "deploy": "gh-pages -d client/build"
   },
   "keywords": [
     "party",
