@@ -277,6 +277,10 @@ app.get('/api/health', (req, res) => {
   res.json({ status: 'OK' });
 });
 
+app.get("/api/game", (req, res) => {
+  res.json({ status: "ok", message: "API fonctionne" });
+});
+
 // Serve React app for all other routes
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, '../client/build/index.html'));
