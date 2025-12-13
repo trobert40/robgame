@@ -186,8 +186,38 @@ io.on("connection", (socket) => {
     }
 
     if (room && room.game) {
-      room.game.handleAction(socket.id, action); // This mutates the game state
+      const game = room.game;
+      const gameType = game.constructor.name;
+      const oldStage = game.stage;
+
+      const actionResult = game.handleAction(socket.id, action); // This mutates the game state
+
       const updatedRoomState = room.getState();
+
+      if (gameType === "PurpleGame") {
+        if (actionResult && actionResult.penalty) {
+          socket.emit("penalty_received", {
+            penalties: [{ amount: actionResult.penalty, type: "drink" }],
+          });
+        }
+      } else if (gameType === "PMUGame") {
+        if (
+          updatedRoomState.game.stage === "finished" &&
+          oldStage !== "finished"
+        ) {
+          updatedRoomState.game.players.forEach((player) => {
+            if (player.penalties && player.penalties.length > 0) {
+              const playerSocket = io.sockets.sockets.get(player.id);
+              if (playerSocket) {
+                playerSocket.emit("penalty_received", {
+                  penalties: player.penalties,
+                });
+              }
+            }
+          });
+        }
+      }
+
       io.to(socket.currentRoom).emit("gameStateUpdated", updatedRoomState);
       if (callback) callback({ success: true, result: updatedRoomState });
     }

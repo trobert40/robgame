@@ -1,0 +1,11 @@
+cd client
+npm run build
+Remove-Item ../docs/* -Recurse -Force
+Copy-Item build/* ../docs/ -Recurse
+cd ..
+
+
+git add .
+git commit -m "Mise à jour"
+git pull origin main
+git push origin main

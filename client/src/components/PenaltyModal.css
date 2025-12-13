@@ -1,0 +1,95 @@
+.penalty-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.penalty-modal {
+  background: #2c2c2c;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+  width: 90%;
+  max-width: 400px;
+  color: #fff;
+  font-family: 'Arial', sans-serif;
+  overflow: hidden;
+  animation: slide-in 0.3s ease-out;
+}
+
+@keyframes slide-in {
+  from {
+    transform: translateY(-50px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.penalty-modal-header {
+  background-color: #e74c3c;
+  padding: 16px;
+  text-align: center;
+}
+
+.penalty-modal-header h2 {
+  margin: 0;
+  font-size: 1.8em;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.penalty-modal-body {
+  padding: 24px;
+  font-size: 1.2em;
+  line-height: 1.6;
+  text-align: center;
+}
+
+.penalty-modal-body p {
+  margin: 0 0 10px;
+}
+
+.penalty-modal-body ul {
+  list-style: none;
+  padding: 0;
+  margin: 10px 0 0;
+}
+
+.penalty-modal-body li {
+  background: #3a3a3a;
+  padding: 8px;
+  border-radius: 6px;
+  margin-bottom: 8px;
+}
+
+.penalty-modal-footer {
+  padding: 16px;
+  text-align: center;
+  background: #232323;
+}
+
+.penalty-modal-close-btn {
+  background-color: #3498db;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 24px;
+  font-size: 1.1em;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  width: 100%;
+}
+
+.penalty-modal-close-btn:hover {
+  background-color: #2980b9;
+}

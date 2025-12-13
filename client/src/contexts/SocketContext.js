@@ -9,6 +9,9 @@ export const SocketProvider = ({ children }) => {
   const [currentRoom, setCurrentRoom] = useState(null);
   const [roomData, setRoomData] = useState(null);
   const [messages, setMessages] = useState([]);
+  const [penalty, setPenalty] = useState(null);
+
+  const closePenaltyModal = () => setPenalty(null);
 
   useEffect(() => {
     // Détermine l'URL : localhost si on développe, sinon l'adresse de votre VPS
@@ -69,6 +72,10 @@ export const SocketProvider = ({ children }) => {
 
     newSocket.on("newMessage", (messageData) => {
       setMessages((prev) => [...prev, messageData]);
+    });
+
+    newSocket.on("penalty_received", (data) => {
+      setPenalty(data.penalties);
     });
 
     setSocket(newSocket);
@@ -166,6 +173,8 @@ export const SocketProvider = ({ children }) => {
     currentRoom,
     roomData,
     messages,
+    penalty,
+    closePenaltyModal,
     createRoom,
     joinRoom,
     startGame,
