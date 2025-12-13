@@ -10,7 +10,7 @@ const app = express();
 const server = http.createServer(app);
 
 const allowedOrigins = [
-  "https://www.robgame.fr",
+  "https://robgame.fr",
   "https://api.robgame.fr",
   "https://trobert40.github.io",
   "http://localhost:3000",

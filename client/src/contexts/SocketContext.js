@@ -18,7 +18,7 @@ export const SocketProvider = ({ children }) => {
     const SERVER_URL =
       window.location.hostname === "localhost"
         ? "http://localhost:3001"
-        : "https://api.www.robgame.fr";
+        : "https://api.robgame.fr";
 
     const newSocket = io(process.env.REACT_APP_SERVER_URL || SERVER_URL, {
       reconnection: true,
