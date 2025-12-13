@@ -45,6 +45,10 @@ io.on('connection', (socket) => {
 
   // Create a new room
   socket.on('createRoom', (playerName, callback) => {
+    if (typeof playerName !== 'string' || playerName.trim().length === 0 || playerName.length > 20) {
+      return callback({ success: false, error: 'Invalid player name.' });
+    }
+
     let roomCode;
     do {
       roomCode = Math.random().toString(36).substring(2, 8).toUpperCase();
@@ -63,6 +67,13 @@ io.on('connection', (socket) => {
 
   // Join an existing room
   socket.on('joinRoom', (roomCode, playerName, callback) => {
+    if (typeof roomCode !== 'string' || roomCode.length !== 6) {
+      return callback({ success: false, error: 'Invalid room code.' });
+    }
+    if (typeof playerName !== 'string' || playerName.trim().length === 0 || playerName.length > 20) {
+      return callback({ success: false, error: 'Invalid player name.' });
+    }
+
     const room = rooms.get(roomCode);
     
     if (!room) {
@@ -81,7 +92,7 @@ io.on('connection', (socket) => {
     socket.currentRoom = roomCode;
 
     io.to(roomCode).emit('playerJoined', {
-      players: room.getPlayers(),
+      roomData: room.getState(),
       systemMessage: { 
         id: uuidv4(), 
         text: `${playerName} has joined the room.`, 
@@ -95,6 +106,10 @@ io.on('connection', (socket) => {
 
   // Start game
   socket.on('startGame', (gameType, callback) => {
+    if (!['PMU', 'Purple'].includes(gameType)) {
+      return callback && callback({ success: false, error: 'Invalid game type.' });
+    }
+
     const room = rooms.get(socket.currentRoom);
     if (!room) {
       return callback && callback({ success: false, error: 'Room not found.' });
@@ -117,6 +132,37 @@ io.on('connection', (socket) => {
   // Game actions
   socket.on('gameAction', (action, callback) => {
     const room = rooms.get(socket.currentRoom);
+    if (!room || !room.game) {
+      return callback && callback({ success: false, error: 'Game not running.' });
+    }
+
+    // Server-side validation
+    let isValid = true;
+    const gameType = room.game.constructor.name;
+
+    if (gameType === 'PMUGame') {
+      if (action.type === 'placeBet') {
+        const { suit, amount } = action;
+        const validSuits = ['hearts', 'diamonds', 'clubs', 'spades'];
+        if (!validSuits.includes(suit) || !Number.isInteger(amount) || amount <= 0) {
+          isValid = false;
+        }
+      }
+    } else if (gameType === 'PurpleGame') {
+      if (action.type === 'predict') {
+        const { prediction } = action;
+        const validPredictions = ['rouge', 'noir', 'purple'];
+        if (!validPredictions.includes(prediction)) {
+          isValid = false;
+        }
+      }
+    }
+
+    if (!isValid) {
+      console.error(`Invalid action from ${socket.id}:`, action);
+      return callback && callback({ success: false, error: 'Invalid action.' });
+    }
+
     if (room && room.game) {
       room.game.handleAction(socket.id, action); // This mutates the game state
       const updatedRoomState = room.getState();
@@ -145,6 +191,9 @@ io.on('connection', (socket) => {
   });
 
   socket.on('sendMessage', (message, callback) => {
+    if (typeof message !== 'string' || message.trim().length === 0 || message.length > 500) {
+      return callback && callback({ success: false, error: 'Invalid message.' });
+    }
     const roomCode = socket.currentRoom;
     if (roomCode) {
       const room = rooms.get(roomCode);
@@ -182,7 +231,7 @@ io.on('connection', (socket) => {
           console.log(`Room ${roomCode} deleted as last player left.`);
         } else {
           io.to(roomCode).emit('playerLeft', {
-            players: room.getPlayers(),
+            roomData: room.getState(),
             systemMessage: { 
               id: uuidv4(), 
               text: `${playerName} has left the room.`, 
@@ -209,7 +258,7 @@ io.on('connection', (socket) => {
           console.log(`Room ${roomCode} deleted (empty)`);
         } else {
           io.to(roomCode).emit('playerLeft', {
-            players: room.getPlayers(),
+            roomData: room.getState(),
             systemMessage: { 
               id: uuidv4(), 
               text: `${socket.playerName || 'A player'} has left the room.`, 

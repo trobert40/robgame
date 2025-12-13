@@ -7,7 +7,6 @@ export const SocketProvider = ({ children }) => {
   const [socket, setSocket] = useState(null);
   const [connected, setConnected] = useState(false);
   const [currentRoom, setCurrentRoom] = useState(null);
-  const [players, setPlayers] = useState([]);
   const [roomData, setRoomData] = useState(null);
   const [messages, setMessages] = useState([]);
 
@@ -30,16 +29,14 @@ export const SocketProvider = ({ children }) => {
     });
 
     newSocket.on('playerJoined', (data) => {
-      setPlayers(data.players);
-      setRoomData(prev => ({ ...prev, players: data.players }));
+      setRoomData(data.roomData);
       if (data.systemMessage) {
         setMessages(prev => [...prev, { ...data.systemMessage, type: 'system' }]);
       }
     });
 
     newSocket.on('playerLeft', (data) => {
-      setPlayers(data.players);
-      setRoomData(prev => ({ ...prev, players: data.players }));
+      setRoomData(data.roomData);
       if (data.systemMessage) {
         setMessages(prev => [...prev, { ...data.systemMessage, type: 'system' }]);
       }
@@ -75,7 +72,6 @@ export const SocketProvider = ({ children }) => {
         if (response.success) {
           setCurrentRoom(response.roomCode);
           setRoomData(response.roomData);
-          setPlayers(response.roomData.players);
           setMessages([]); // Clear messages for new room
         }
         resolve(response);
@@ -89,7 +85,6 @@ export const SocketProvider = ({ children }) => {
         if (response.success) {
           setCurrentRoom(roomCode);
           setRoomData(response.roomData);
-          setPlayers(response.roomData.players);
           setMessages([]); // Clear messages for new room
         }
         resolve(response);
@@ -119,7 +114,6 @@ export const SocketProvider = ({ children }) => {
         if (response.success) {
           setCurrentRoom(null);
           setRoomData(null);
-          setPlayers([]);
           setMessages([]);
         }
         resolve(response);
@@ -143,7 +137,6 @@ export const SocketProvider = ({ children }) => {
     socket,
     connected,
     currentRoom,
-    players,
     roomData,
     messages,
     createRoom,
@@ -161,4 +154,3 @@ export const SocketProvider = ({ children }) => {
     </SocketContext.Provider>
   );
 };
-
