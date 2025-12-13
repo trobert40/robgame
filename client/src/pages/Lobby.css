@@ -88,6 +88,16 @@
   border-left: 4px solid var(--medium-jungle);
   color: var(--lime-cream);
   font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.player-photo {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
 }
 
 .games-section {

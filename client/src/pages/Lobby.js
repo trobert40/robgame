@@ -50,6 +50,7 @@ export const Lobby = () => {
           <ul className="players-list">
             {roomData.players.map((player) => (
               <li key={player.id} className="player-item">
+                <img src="/assets/logo.png" alt={player.name} className="player-photo" />
                 {player.isHost && '👑 '}
                 {player.name}
               </li>

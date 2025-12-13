@@ -3,10 +3,15 @@ import { useSocket } from '../hooks/useSocket';
 import './Chat.css';
 
 export const Chat = () => {
-  const { messages, sendMessage, socket } = useSocket();
+  const { messages, sendMessage, socket, roomData } = useSocket();
   const [newMessage, setNewMessage] = useState('');
   const [isChatOpen, setIsChatOpen] = useState(false);
   const messagesEndRef = useRef(null);
+
+  const getPlayerPhoto = (senderId) => {
+    const player = roomData?.players.find(p => p.id === senderId);
+    return player?.photoUrl || '/assets/logo.png';
+  }
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -46,9 +51,14 @@ export const Chat = () => {
                 }`}
               >
                 {msg.type !== 'system' && (
-                  <div className="message-sender">{msg.senderName}</div>
+                    <img src={getPlayerPhoto(msg.senderId)} alt={msg.senderName} className="player-photo" />
                 )}
-                <div className="message-text">{msg.text}</div>
+                <div className="message-content">
+                    {msg.type !== 'system' && (
+                    <div className="message-sender">{msg.senderName}</div>
+                    )}
+                    <div className="message-text">{msg.text}</div>
+                </div>
               </div>
             ))}
             <div ref={messagesEndRef} />

@@ -310,11 +310,20 @@
 
 .bet-item {
   display: flex;
+  align-items: center;
+  gap: 10px;
   justify-content: space-between;
   padding: 10px;
   background: var(--midnight-violet);
   border-radius: 5px;
   border-left: 4px solid var(--rust-brown);
+}
+
+.player-photo {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
 }
 
 .bet-item.has-bet {
