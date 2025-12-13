@@ -1,18 +1,19 @@
-const express = require('express');
-const http = require('http');
-const socketIO = require('socket.io');
-const cors = require('cors');
-const path = require('path');
-const { v4: uuidv4 } = require('uuid');
-const GameRoom = require('./GameRoom');
+const express = require("express");
+const http = require("http");
+const socketIO = require("socket.io");
+const cors = require("cors");
+const path = require("path");
+const { v4: uuidv4 } = require("uuid");
+const GameRoom = require("./GameRoom");
 
 const app = express();
 const server = http.createServer(app);
 
 const allowedOrigins = [
   "https://robgame.fr",
+  "https://trobert40.github.io",
   "http://localhost:3000",
-  "http://localhost:3001"
+  "http://localhost:3001",
 ];
 
 const corsOptions = {
@@ -20,33 +21,37 @@ const corsOptions = {
     if (allowedOrigins.includes(origin) || !origin) {
       callback(null, true);
     } else {
-      callback(new Error('Not allowed by CORS'));
+      callback(new Error("Not allowed by CORS"));
     }
   },
-  methods: ['GET', 'POST']
+  methods: ["GET", "POST"],
 };
 
 const io = socketIO(server, {
-  cors: corsOptions
+  cors: corsOptions,
 });
 
 app.use(cors(corsOptions));
 app.use(express.json());
 
 // Serve static files from React app
-app.use(express.static(path.join(__dirname, '../client/build')));
+app.use(express.static(path.join(__dirname, "../client/build")));
 
 // Store active rooms
 const rooms = new Map();
 
 // Socket.IO event handlers
-io.on('connection', (socket) => {
+io.on("connection", (socket) => {
   console.log(`User connected: ${socket.id}`);
 
   // Create a new room
-  socket.on('createRoom', (playerName, callback) => {
-    if (typeof playerName !== 'string' || playerName.trim().length === 0 || playerName.length > 20) {
-      return callback({ success: false, error: 'Invalid player name.' });
+  socket.on("createRoom", (playerName, callback) => {
+    if (
+      typeof playerName !== "string" ||
+      playerName.trim().length === 0 ||
+      playerName.length > 20
+    ) {
+      return callback({ success: false, error: "Invalid player name." });
     }
 
     let roomCode;
@@ -56,33 +61,37 @@ io.on('connection', (socket) => {
 
     const room = new GameRoom(roomCode, playerName, socket.id);
     rooms.set(roomCode, room);
-    
+
     socket.join(roomCode);
     socket.playerName = playerName;
     socket.currentRoom = roomCode;
-    
+
     console.log(`Room created: ${roomCode} by ${playerName}`);
     callback({ success: true, roomCode, roomData: room.getState() });
   });
 
   // Join an existing room
-  socket.on('joinRoom', (roomCode, playerName, callback) => {
-    if (typeof roomCode !== 'string' || roomCode.length !== 6) {
-      return callback({ success: false, error: 'Invalid room code.' });
+  socket.on("joinRoom", (roomCode, playerName, callback) => {
+    if (typeof roomCode !== "string" || roomCode.length !== 6) {
+      return callback({ success: false, error: "Invalid room code." });
     }
-    if (typeof playerName !== 'string' || playerName.trim().length === 0 || playerName.length > 20) {
-      return callback({ success: false, error: 'Invalid player name.' });
+    if (
+      typeof playerName !== "string" ||
+      playerName.trim().length === 0 ||
+      playerName.length > 20
+    ) {
+      return callback({ success: false, error: "Invalid player name." });
     }
 
     const room = rooms.get(roomCode);
-    
+
     if (!room) {
-      callback({ success: false, error: 'Room not found' });
+      callback({ success: false, error: "Room not found" });
       return;
     }
 
     if (room.isFull()) {
-      callback({ success: false, error: 'Room is full' });
+      callback({ success: false, error: "Room is full" });
       return;
     }
 
@@ -91,13 +100,13 @@ io.on('connection', (socket) => {
     socket.playerName = playerName;
     socket.currentRoom = roomCode;
 
-    io.to(roomCode).emit('playerJoined', {
+    io.to(roomCode).emit("playerJoined", {
       roomData: room.getState(),
-      systemMessage: { 
-        id: uuidv4(), 
-        text: `${playerName} has joined the room.`, 
-        timestamp: new Date().toISOString() 
-      }
+      systemMessage: {
+        id: uuidv4(),
+        text: `${playerName} has joined the room.`,
+        timestamp: new Date().toISOString(),
+      },
     });
 
     callback({ success: true, roomData: room.getState() });
@@ -105,53 +114,66 @@ io.on('connection', (socket) => {
   });
 
   // Start game
-  socket.on('startGame', (gameType, callback) => {
-    if (!['PMU', 'Purple'].includes(gameType)) {
-      return callback && callback({ success: false, error: 'Invalid game type.' });
+  socket.on("startGame", (gameType, callback) => {
+    if (!["PMU", "Purple"].includes(gameType)) {
+      return (
+        callback && callback({ success: false, error: "Invalid game type." })
+      );
     }
 
     const room = rooms.get(socket.currentRoom);
     if (!room) {
-      return callback && callback({ success: false, error: 'Room not found.' });
+      return callback && callback({ success: false, error: "Room not found." });
     }
 
     const player = room.getPlayer(socket.id);
     if (!player || !player.isHost) {
-      return callback && callback({ success: false, error: 'Only the host can start the game.' });
+      return (
+        callback &&
+        callback({ success: false, error: "Only the host can start the game." })
+      );
     }
 
     room.startGame(gameType);
-    io.to(socket.currentRoom).emit('gameStarted', {
+    io.to(socket.currentRoom).emit("gameStarted", {
       gameType,
-      roomData: room.getState()
+      roomData: room.getState(),
     });
-    console.log(`Game ${gameType} started in room ${socket.currentRoom} by host ${socket.id}`);
+    console.log(
+      `Game ${gameType} started in room ${socket.currentRoom} by host ${socket.id}`
+    );
     if (callback) callback({ success: true, roomData: room.getState() });
   });
 
   // Game actions
-  socket.on('gameAction', (action, callback) => {
+  socket.on("gameAction", (action, callback) => {
     const room = rooms.get(socket.currentRoom);
     if (!room || !room.game) {
-      return callback && callback({ success: false, error: 'Game not running.' });
+      return (
+        callback && callback({ success: false, error: "Game not running." })
+      );
     }
 
     // Server-side validation
     let isValid = true;
     const gameType = room.game.constructor.name;
 
-    if (gameType === 'PMUGame') {
-      if (action.type === 'placeBet') {
+    if (gameType === "PMUGame") {
+      if (action.type === "placeBet") {
         const { suit, amount } = action;
-        const validSuits = ['hearts', 'diamonds', 'clubs', 'spades'];
-        if (!validSuits.includes(suit) || !Number.isInteger(amount) || amount <= 0) {
+        const validSuits = ["hearts", "diamonds", "clubs", "spades"];
+        if (
+          !validSuits.includes(suit) ||
+          !Number.isInteger(amount) ||
+          amount <= 0
+        ) {
           isValid = false;
         }
       }
-    } else if (gameType === 'PurpleGame') {
-      if (action.type === 'predict') {
+    } else if (gameType === "PurpleGame") {
+      if (action.type === "predict") {
         const { prediction } = action;
-        const validPredictions = ['rouge', 'noir', 'purple'];
+        const validPredictions = ["rouge", "noir", "purple"];
         if (!validPredictions.includes(prediction)) {
           isValid = false;
         }
@@ -160,18 +182,18 @@ io.on('connection', (socket) => {
 
     if (!isValid) {
       console.error(`Invalid action from ${socket.id}:`, action);
-      return callback && callback({ success: false, error: 'Invalid action.' });
+      return callback && callback({ success: false, error: "Invalid action." });
     }
 
     if (room && room.game) {
       room.game.handleAction(socket.id, action); // This mutates the game state
       const updatedRoomState = room.getState();
-      io.to(socket.currentRoom).emit('gameStateUpdated', updatedRoomState);
+      io.to(socket.currentRoom).emit("gameStateUpdated", updatedRoomState);
       if (callback) callback({ success: true, result: updatedRoomState });
     }
   });
 
-  socket.on('playAgain', (callback) => {
+  socket.on("playAgain", (callback) => {
     const roomCode = socket.currentRoom;
     if (roomCode) {
       const room = rooms.get(roomCode);
@@ -179,20 +201,32 @@ io.on('connection', (socket) => {
         // Host check
         const player = room.getPlayer(socket.id);
         if (!player || !player.isHost) {
-          return callback && callback({ success: false, error: 'Only the host can restart the game.' });
+          return (
+            callback &&
+            callback({
+              success: false,
+              error: "Only the host can restart the game.",
+            })
+          );
         }
 
         room.playAgain();
         // Notify all players that the room is back to the lobby/waiting state
-        io.to(roomCode).emit('roomStateUpdated', room.getState());
+        io.to(roomCode).emit("roomStateUpdated", room.getState());
         if (callback) callback({ success: true });
       }
     }
   });
 
-  socket.on('sendMessage', (message, callback) => {
-    if (typeof message !== 'string' || message.trim().length === 0 || message.length > 500) {
-      return callback && callback({ success: false, error: 'Invalid message.' });
+  socket.on("sendMessage", (message, callback) => {
+    if (
+      typeof message !== "string" ||
+      message.trim().length === 0 ||
+      message.length > 500
+    ) {
+      return (
+        callback && callback({ success: false, error: "Invalid message." })
+      );
     }
     const roomCode = socket.currentRoom;
     if (roomCode) {
@@ -203,20 +237,21 @@ io.on('connection', (socket) => {
           senderId: socket.id,
           senderName: socket.playerName,
           text: message,
-          timestamp: new Date().toISOString()
+          timestamp: new Date().toISOString(),
         };
         // Broadcast to everyone in the room
-        io.to(roomCode).emit('newMessage', messageData);
+        io.to(roomCode).emit("newMessage", messageData);
         if (callback) callback({ success: true });
       } else {
-        if (callback) callback({ success: false, error: 'Room not found.' });
+        if (callback) callback({ success: false, error: "Room not found." });
       }
     } else {
-      if (callback) callback({ success: false, error: 'You are not in a room.' });
+      if (callback)
+        callback({ success: false, error: "You are not in a room." });
     }
   });
 
-  socket.on('leaveRoom', (callback) => {
+  socket.on("leaveRoom", (callback) => {
     const roomCode = socket.currentRoom;
     if (roomCode) {
       const room = rooms.get(roomCode);
@@ -225,45 +260,46 @@ io.on('connection', (socket) => {
         room.removePlayer(socket.id);
         socket.leave(roomCode);
         socket.currentRoom = null;
-        
+
         if (room.isEmpty()) {
           rooms.delete(roomCode);
           console.log(`Room ${roomCode} deleted as last player left.`);
         } else {
-          io.to(roomCode).emit('playerLeft', {
+          io.to(roomCode).emit("playerLeft", {
             roomData: room.getState(),
-            systemMessage: { 
-              id: uuidv4(), 
-              text: `${playerName} has left the room.`, 
-              timestamp: new Date().toISOString() 
-            }
+            systemMessage: {
+              id: uuidv4(),
+              text: `${playerName} has left the room.`,
+              timestamp: new Date().toISOString(),
+            },
           });
         }
       }
     }
-    if (callback) callback({ success: true, message: 'You have left the room.' });
+    if (callback)
+      callback({ success: true, message: "You have left the room." });
     console.log(`User ${socket.id} gracefully left room ${roomCode}`);
   });
 
   // Disconnect
-  socket.on('disconnect', () => {
+  socket.on("disconnect", () => {
     const roomCode = socket.currentRoom;
     if (roomCode) {
       const room = rooms.get(roomCode);
       if (room) {
         room.removePlayer(socket.id);
-        
+
         if (room.isEmpty()) {
           rooms.delete(roomCode);
           console.log(`Room ${roomCode} deleted (empty)`);
         } else {
-          io.to(roomCode).emit('playerLeft', {
+          io.to(roomCode).emit("playerLeft", {
             roomData: room.getState(),
-            systemMessage: { 
-              id: uuidv4(), 
-              text: `${socket.playerName || 'A player'} has left the room.`, 
-              timestamp: new Date().toISOString() 
-            }
+            systemMessage: {
+              id: uuidv4(),
+              text: `${socket.playerName || "A player"} has left the room.`,
+              timestamp: new Date().toISOString(),
+            },
           });
         }
       }
@@ -273,8 +309,8 @@ io.on('connection', (socket) => {
 });
 
 // API routes
-app.get('/api/health', (req, res) => {
-  res.json({ status: 'OK' });
+app.get("/api/health", (req, res) => {
+  res.json({ status: "OK" });
 });
 
 app.get("/api/game", (req, res) => {
@@ -282,17 +318,17 @@ app.get("/api/game", (req, res) => {
 });
 
 // Serve React app for all other routes
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../client/build/index.html'));
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "../client/build/index.html"));
 });
 
 // Error handling
-process.on('unhandledRejection', (reason, promise) => {
-  console.error('Unhandled Rejection at:', promise, 'reason:', reason);
+process.on("unhandledRejection", (reason, promise) => {
+  console.error("Unhandled Rejection at:", promise, "reason:", reason);
 });
 
 const PORT = process.env.PORT || 3001;
-server.listen(PORT, '0.0.0.0', () => {
+server.listen(PORT, "0.0.0.0", () => {
   console.log(`Server running on port ${PORT}`);
 });
 
