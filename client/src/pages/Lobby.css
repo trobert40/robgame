@@ -17,23 +17,23 @@
 .lobby-content {
   max-width: 900px;
   margin: 0 auto;
-  background: var(--dark-garnet);
-  border: 2px solid var(--rust-brown);
+  background: #FFFFFF;
+  border: 1px solid #e0e0e0;
   border-radius: 20px;
   padding: 40px;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
 
 .lobby-content h1 {
   text-align: center;
-  color: var(--lime-cream);
+  color: var(--rust-brown);
   margin-bottom: 20px;
   font-size: 2.5em;
 }
 
 .code-display {
   text-align: center;
-  background: var(--midnight-violet);
+  background: var(--light-grey-background);
   padding: 15px;
   border-radius: 10px;
   margin-bottom: 30px;
@@ -42,7 +42,7 @@
 }
 
 .code-display strong {
-  color: var(--medium-jungle);
+  color: var(--rust-brown);
   font-size: 1.5em;
   font-weight: 800;
   letter-spacing: 2px;
@@ -61,7 +61,7 @@
 
 .qr-section canvas {
   border-radius: 10px;
-  border: 3px solid var(--lime-cream);
+  border: 3px solid var(--medium-jungle);
 }
 
 .players-section {
@@ -82,7 +82,7 @@
 }
 
 .player-item {
-  background: var(--midnight-violet);
+  background: var(--light-grey-background);
   padding: 15px;
   border-radius: 10px;
   border-left: 4px solid var(--medium-jungle);
@@ -118,36 +118,37 @@
 }
 
 .game-card {
-  background: var(--rust-brown);
+  background: var(--dark-garnet);
   border-radius: 15px;
   padding: 25px;
   text-align: center;
   transition: all 0.3s ease;
-  border: 2px solid transparent;
+  border: 1px solid #e0e0e0;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
 }
 
 .game-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 10px 30px rgba(71, 160, 37, 0.2);
-  border-color: var(--lime-cream);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  border-color: var(--medium-jungle);
 }
 
 .game-card h3 {
   font-size: 1.8em;
-  color: var(--lime-cream);
+  color: var(--rust-brown);
   margin-bottom: 10px;
 }
 
 .game-card p {
   color: var(--lime-cream);
-  opacity: 0.8;
+  opacity: 0.7;
   margin-bottom: 20px;
   font-size: 0.95em;
 }
 
 .btn-game {
   background: var(--medium-jungle);
-  color: var(--midnight-violet);
+  color: var(--light-text);
   border: none;
   padding: 12px 20px;
   border-radius: 10px;
@@ -159,7 +160,7 @@
 
 .btn-game:hover {
   transform: scale(1.05);
-  background: var(--lime-cream);
+  background: var(--coral-accent);
 }
 
 @media (max-width: 600px) {

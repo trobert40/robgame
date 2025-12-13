@@ -1,9 +1,12 @@
 :root {
-  --midnight-violet: #241023;
-  --dark-garnet: #6b0504;
-  --rust-brown: #a3320b;
-  --lime-cream: #d5e68d;
-  --medium-jungle: #47a025;
+  --midnight-violet: #F5F5F5; /* main background */
+  --dark-garnet: #FFFFFF; /* card background */
+  --rust-brown: #326E9E; /* secondary color */
+  --lime-cream: #333333; /* text color */
+  --medium-jungle: #4E9FA9; /* primary color */
+  --coral-accent: #FF8B7A; /* accent color */
+  --light-text: #FFFFFF;
+  --light-grey-background: #EEEEEE;
 }
 
 body {

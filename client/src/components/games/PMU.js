@@ -52,7 +52,7 @@ const PMU = ({ gameState }) => {
       <div className="bets-list">
         {gameState.players.map(player => (
           <div key={player.id} className={`bet-item ${player.hasBet ? 'has-bet' : ''}`}>
-            <img src="/assets/logo.png" alt={player.name} className="player-photo" />
+            <img src={`https://robohash.org/${player.name}?set=set1`} alt={player.name} className="player-photo" />
             <span>{player.name}</span>
             {player.hasBet ? (
               <span className="bet-details">

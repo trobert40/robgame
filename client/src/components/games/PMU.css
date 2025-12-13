@@ -6,18 +6,18 @@
 }
 
 .pmu-board {
-  background: var(--dark-garnet);
-  border: 2px solid var(--rust-brown);
+  background: #FFFFFF;
+  border: 1px solid #e0e0e0;
   border-radius: 20px;
   padding: 40px;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
   color: var(--lime-cream);
 }
 
 .pmu-title {
   text-align: center;
   font-size: 2.5em;
-  color: var(--lime-cream);
+  color: var(--rust-brown);
   margin-bottom: 30px;
 }
 
@@ -38,7 +38,7 @@
   grid-template-columns: 100px 1fr 60px;
   gap: 15px;
   align-items: center;
-  background: var(--midnight-violet);
+  background: var(--light-grey-background);
   padding: 15px;
   border-radius: 10px;
 }
@@ -50,11 +50,11 @@
 
 .race-track {
   position: relative;
-  background: var(--rust-brown);
+  background: #e0e0e0;
   height: 40px;
   border-radius: 10px;
   overflow: hidden;
-  border: 2px solid var(--lime-cream);
+  border: 1px solid #ccc;
 }
 
 .horse-position {
@@ -68,14 +68,14 @@
 .horse-progress {
   text-align: center;
   font-weight: 600;
-  color: var(--medium-jungle);
+  color: var(--rust-brown);
 }
 
 .betting-section,
 .racing-section {
   margin-bottom: 30px;
   padding: 30px;
-  background: rgba(0,0,0,0.2);
+  background: var(--light-grey-background);
   border-radius: 15px;
 }
 
@@ -94,9 +94,9 @@
 
 .horse-bet-btn {
   padding: 15px;
-  border: 3px solid var(--rust-brown);
-  background: var(--midnight-violet);
-  color: var(--lime-cream);
+  border: 2px solid var(--rust-brown);
+  background: transparent;
+  color: var(--rust-brown);
   border-radius: 10px;
   cursor: pointer;
   font-size: 1em;
@@ -105,14 +105,15 @@
 }
 
 .horse-bet-btn:hover {
-  border-color: var(--lime-cream);
-  background: var(--rust-brown);
+  border-color: var(--medium-jungle);
+  background: var(--medium-jungle);
+  color: var(--light-text);
 }
 
 .horse-bet-btn.selected {
   background: var(--medium-jungle);
-  color: var(--midnight-violet);
-  border-color: var(--lime-cream);
+  color: var(--light-text);
+  border-color: var(--medium-jungle);
 }
 
 .bet-amount-control {
@@ -121,7 +122,7 @@
   gap: 15px;
   margin-bottom: 20px;
   padding: 15px;
-  background: var(--midnight-violet);
+  background: var(--light-grey-background);
   border-radius: 10px;
 }
 
@@ -133,7 +134,7 @@
 .btn-place-bet {
   padding: 10px 20px;
   background: var(--medium-jungle);
-  color: var(--midnight-violet);
+  color: var(--light-text);
   border: none;
   border-radius: 8px;
   cursor: pointer;
@@ -142,7 +143,7 @@
 }
 
 .btn-place-bet:hover {
-  background: var(--lime-cream);
+  background: var(--coral-accent);
 }
 
 .btn-finish,
@@ -151,7 +152,7 @@
   padding: 15px;
   font-size: 1.1em;
   background: var(--medium-jungle);
-  color: var(--midnight-violet);
+  color: var(--light-text);
   border: none;
   border-radius: 10px;
   cursor: pointer;
@@ -162,13 +163,13 @@
 .btn-finish:hover,
 .btn-draw:hover {
   transform: translateY(-2px);
-  background: var(--lime-cream);
+  background: var(--coral-accent);
 }
 
 .players-scores {
   margin-top: 30px;
   padding: 20px;
-  background: var(--midnight-violet);
+  background: var(--light-grey-background);
   border-radius: 10px;
 }
 
@@ -184,7 +185,7 @@
 }
 
 .score-item {
-  background: var(--rust-brown);
+  background: var(--dark-garnet);
   padding: 15px;
   border-radius: 8px;
   display: flex;
@@ -217,12 +218,12 @@
 }
 
 .finish-content {
-  background-color: var(--midnight-violet);
-  color: var(--lime-cream);
+  background-color: #FFFFFF;
+  color: #333333;
   padding: 40px;
   border-radius: 15px;
   text-align: left;
-  box-shadow: 0 5px 25px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 5px 25px rgba(0, 0, 0, 0.1);
   width: 100%;
   max-width: 800px;
 }
@@ -235,7 +236,7 @@
     text-align: center;
     font-size: 2em;
     margin-bottom: 30px;
-    color: var(--medium-jungle);
+    color: var(--rust-brown);
 }
 
 .horse-ranking, .player-penalties {
@@ -244,7 +245,7 @@
 
 .horse-ranking h3, .player-penalties h3 {
     font-size: 1.5em;
-    color: var(--lime-cream);
+    color: var(--rust-brown);
     border-bottom: 2px solid var(--rust-brown);
     padding-bottom: 10px;
     margin-bottom: 15px;
@@ -259,7 +260,7 @@
     font-size: 1.2em;
     padding: 8px;
     border-radius: 5px;
-    background-color: rgba(0,0,0,0.2);
+    background-color: var(--light-grey-background);
     margin-bottom: 8px;
 }
 
@@ -293,7 +294,7 @@
 .players-bets-section {
   margin: 30px 0;
   padding: 20px;
-  background: rgba(0,0,0,0.2);
+  background: var(--light-grey-background);
   border-radius: 10px;
 }
 
@@ -314,9 +315,9 @@
   gap: 10px;
   justify-content: space-between;
   padding: 10px;
-  background: var(--midnight-violet);
+  background: var(--dark-garnet);
   border-radius: 5px;
-  border-left: 4px solid var(--rust-brown);
+  border-left: 4px solid var(--medium-jungle);
 }
 
 .player-photo {
@@ -338,7 +339,7 @@
 .waiting-section {
   text-align: center;
   padding: 40px;
-  background: rgba(0,0,0,0.2);
+  background: var(--light-grey-background);
   border-radius: 15px;
   margin: 20px 0;
 }
@@ -372,7 +373,7 @@
 
 .btn-home {
   background-color: var(--rust-brown);
-  color: white;
+  color: var(--light-text);
 }
 
 .btn-home:hover {
@@ -381,12 +382,12 @@
 
 .btn-again {
   background-color: var(--medium-jungle);
-  color: white;
+  color: var(--light-text);
 }
 
 .btn-again:hover {
-  background-color: var(--lime-cream);
-  color: var(--midnight-violet);
+  background-color: var(--coral-accent);
+  color: var(--light-text);
 }
 
 

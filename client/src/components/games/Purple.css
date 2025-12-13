@@ -11,11 +11,11 @@
   top: 20px;
   left: 50%;
   transform: translateX(-50%);
-  background-color: var(--rust-brown);
+  background-color: var(--coral-accent);
   color: white;
   padding: 15px 30px;
   border-radius: 25px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
   z-index: 1100;
   font-size: 1.2em;
   font-weight: bold;
@@ -32,11 +32,11 @@
 
 
 .purple-board {
-  background: var(--dark-garnet);
-  border: 2px solid var(--rust-brown);
+  background: #FFFFFF;
+  border: 1px solid #e0e0e0;
   border-radius: 20px;
   padding: 40px;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
   color: var(--lime-cream);
 }
 
@@ -44,10 +44,11 @@
   text-align: center;
   font-size: 2.5em;
   margin-bottom: 30px;
+  color: var(--rust-brown);
 }
 
 .current-player-section {
-  background: var(--midnight-violet);
+  background: var(--light-grey-background);
   padding: 20px;
   border-radius: 15px;
   margin-bottom: 30px;
@@ -61,8 +62,8 @@
 }
 
 .current-player-card {
-  background: var(--rust-brown);
-  color: white;
+  background: var(--dark-garnet);
+  color: var(--lime-cream);
   padding: 20px;
   border-radius: 10px;
   display: flex;
@@ -78,7 +79,7 @@
 
 .consecutive-badge {
   background: var(--medium-jungle);
-  color: var(--midnight-violet);
+  color: var(--light-text);
   padding: 8px 15px;
   border-radius: 20px;
   font-size: 0.9em;
@@ -96,7 +97,7 @@
   justify-content: center;
   align-items: center;
   padding: 30px;
-  background: var(--midnight-violet);
+  background: var(--light-grey-background);
   border-radius: 15px;
 }
 
@@ -112,13 +113,13 @@
   font-weight: 800;
   position: relative;
   background: white;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
 }
 
 .card.hearts,
 .card.diamonds {
-  color: var(--dark-garnet);
-  border: 3px solid var(--dark-garnet);
+  color: var(--coral-accent);
+  border: 3px solid var(--coral-accent);
 }
 
 .card.clubs,
@@ -145,7 +146,7 @@
 
 .stacked-cards-info {
   padding: 30px;
-  background: var(--midnight-violet);
+  background: var(--light-grey-background);
   border-radius: 15px;
   text-align: center;
 }
@@ -177,8 +178,8 @@
 
 .card-mini.hearts,
 .card-mini.diamonds {
-  color: var(--dark-garnet);
-  border: 2px solid var(--dark-garnet);
+  color: var(--coral-accent);
+  border: 2px solid var(--coral-accent);
 }
 
 .card-mini.clubs,
@@ -190,7 +191,7 @@
 .predictions-section {
   margin-bottom: 40px;
   padding: 30px;
-  background: rgba(0,0,0,0.2);
+  background: var(--light-grey-background);
   border-radius: 15px;
 }
 
@@ -209,8 +210,8 @@
 .prediction-btn {
   padding: 20px;
   border: 2px solid var(--rust-brown);
-  background: var(--midnight-violet);
-  color: var(--lime-cream);
+  background: transparent;
+  color: var(--rust-brown);
   border-radius: 12px;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -222,8 +223,9 @@
 }
 
 .prediction-btn:hover:not(:disabled) {
-  border-color: var(--lime-cream);
-  background: var(--rust-brown);
+  border-color: var(--medium-jungle);
+  background: var(--medium-jungle);
+  color: var(--light-text);
   transform: translateY(-3px);
 }
 
@@ -249,7 +251,7 @@
   width: 100%;
   padding: 15px;
   background: var(--medium-jungle);
-  color: var(--midnight-violet);
+  color: var(--light-text);
   border: none;
   border-radius: 10px;
   font-size: 1.1em;
@@ -260,14 +262,14 @@
 
 .btn-pass:hover {
   transform: translateY(-2px);
-  background: var(--lime-cream);
+  background: var(--coral-accent);
 }
 
 .players-penalties {
   width: 100%;
   margin-top: 20px;
   padding: 20px;
-  background: rgba(0,0,0,0.2);
+  background: var(--light-grey-background);
   border-radius: 15px;
 }
 
@@ -283,7 +285,7 @@
 }
 
 .penalty-item {
-  background: var(--rust-brown);
+  background: var(--dark-garnet);
   padding: 15px;
   border-radius: 8px;
   display: flex;
@@ -300,8 +302,8 @@
 }
 
 .penalty-badge {
-  background: var(--dark-garnet);
-  color: white;
+  background: var(--coral-accent);
+  color: var(--light-text);
   padding: 5px 12px;
   border-radius: 20px;
   font-weight: 700;
@@ -310,7 +312,7 @@
 .info-bar {
   text-align: center;
   padding: 15px;
-  background: var(--midnight-violet);
+  background: var(--light-grey-background);
   border-radius: 10px;
   opacity: 0.8;
   font-weight: 600;
@@ -342,12 +344,12 @@
 }
 
 .finish-content {
-  background-color: var(--midnight-violet);
-  color: var(--lime-cream);
+  background-color: #FFFFFF;
+  color: #333333;
   padding: 40px;
   border-radius: 15px;
   text-align: center;
-  box-shadow: 0 5px 25px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 5px 25px rgba(0, 0, 0, 0.1);
   width: 100%;
   max-width: 500px;
 }
@@ -381,7 +383,7 @@
 
 .btn-home {
   background-color: var(--rust-brown);
-  color: white;
+  color: var(--light-text);
 }
 
 .btn-home:hover {
@@ -390,12 +392,12 @@
 
 .btn-again {
   background-color: var(--medium-jungle);
-  color: white;
+  color: var(--light-text);
 }
 
 .btn-again:hover {
-  background-color: var(--lime-cream);
-  color: var(--midnight-violet);
+  background-color: var(--coral-accent);
+  color: var(--light-text);
 }
 
 @media (max-width: 768px) {

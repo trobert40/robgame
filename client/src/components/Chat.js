@@ -8,9 +8,12 @@ export const Chat = () => {
   const [isChatOpen, setIsChatOpen] = useState(false);
   const messagesEndRef = useRef(null);
 
-  const getPlayerPhoto = (senderId) => {
+  const getPlayerPhoto = (senderId, senderName) => {
     const player = roomData?.players.find(p => p.id === senderId);
-    return player?.photoUrl || '/assets/logo.png';
+    if (player && player.photoUrl) {
+      return player.photoUrl;
+    }
+    return `https://robohash.org/${senderName}?set=set1`;
   }
 
   const scrollToBottom = () => {
@@ -51,7 +54,7 @@ export const Chat = () => {
                 }`}
               >
                 {msg.type !== 'system' && (
-                    <img src={getPlayerPhoto(msg.senderId)} alt={msg.senderName} className="player-photo" />
+                    <img src={getPlayerPhoto(msg.senderId, msg.senderName)} alt={msg.senderName} className="player-photo" />
                 )}
                 <div className="message-content">
                     {msg.type !== 'system' && (

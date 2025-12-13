@@ -108,7 +108,7 @@ const Purple = ({ gameState }) => {
         {gameState.players &&
           gameState.players.map((player) => (
             <div key={player.id} className="penalty-item">
-              <img src="/assets/logo.png" alt={player.name} className="player-photo" />
+              <img src={`https://robohash.org/${player.name}?set=set1`} alt={player.name} className="player-photo" />
               <span>{player.name}</span>
               <span className="penalty-badge">
                 {player.penalties} gorgée(s)
@@ -152,7 +152,7 @@ const Purple = ({ gameState }) => {
         <div className="current-player-section">
           <h2>Joueur actuel</h2>
           <div className="current-player-card">
-            <img src="/assets/logo.png" alt={currentPlayer?.name} className="player-photo" />
+            <img src={`https://robohash.org/${currentPlayer?.name}?set=set1`} alt={currentPlayer?.name} className="player-photo" />
             <span className="player-name">{currentPlayer?.name}</span>
             <span className="consecutive-badge">
               {gameState.consecutiveCorrect || 0} bonnes réponses
