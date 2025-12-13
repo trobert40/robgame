@@ -115,7 +115,7 @@ io.on("connection", (socket) => {
 
   // Start game
   socket.on("startGame", (gameType, callback) => {
-    if (!["PMU", "Purple"].includes(gameType)) {
+    if (!["PMU", "Purple", "pmu", "purple"].includes(gameType)) {
       return (
         callback && callback({ success: false, error: "Invalid game type." })
       );
