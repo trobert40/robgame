@@ -1,6 +1,5 @@
-const { v4: uuidv4 } = require('uuid');
-const PMUGame = require('./games/PMUGame');
-const PurpleGame = require('./games/PurpleGame');
+const PMUGame = require("./games/PMUGame");
+const PurpleGame = require("./games/PurpleGame");
 
 class GameRoom {
   constructor(code, hostName, hostId) {
@@ -11,12 +10,12 @@ class GameRoom {
         name: hostName,
         isHost: true,
         gorgees: 0,
-        penalties: 0
-      }
+        penalties: 0,
+      },
     ];
     this.game = null;
     this.gameType = null;
-    this.status = 'waiting'; // waiting, rules, playing, finished
+    this.status = "waiting"; // waiting, rules, playing, finished
     this.maxPlayers = 8;
   }
 
@@ -27,7 +26,7 @@ class GameRoom {
         name,
         isHost: false,
         gorgees: 0,
-        penalties: 0
+        penalties: 0,
       });
       return true;
     }
@@ -35,11 +34,15 @@ class GameRoom {
   }
 
   removePlayer(id) {
-    const playerWasHost = this.players.find(p => p.id === id)?.isHost;
-    this.players = this.players.filter(p => p.id !== id);
+    const playerWasHost = this.players.find((p) => p.id === id)?.isHost;
+    this.players = this.players.filter((p) => p.id !== id);
 
     // If the host left and there are other players, assign a new host.
-    if (playerWasHost && this.players.length > 0 && !this.players.some(p => p.isHost)) {
+    if (
+      playerWasHost &&
+      this.players.length > 0 &&
+      !this.players.some((p) => p.isHost)
+    ) {
       this.players[0].isHost = true;
       console.log(`New host assigned to: ${this.players[0].name}`);
     }
@@ -50,7 +53,7 @@ class GameRoom {
   }
 
   getPlayer(id) {
-    return this.players.find(p => p.id === id);
+    return this.players.find((p) => p.id === id);
   }
 
   isEmpty() {
@@ -63,22 +66,22 @@ class GameRoom {
 
   startGame(gameType) {
     this.gameType = gameType;
-    this.status = 'rules';
+    this.status = "rules";
 
-    if (gameType === 'pmu') {
+    if (gameType === "pmu") {
       this.game = new PMUGame(this.players);
-    } else if (gameType === 'purple') {
+    } else if (gameType === "purple") {
       this.game = new PurpleGame(this.players);
     }
 
-    this.status = 'playing';
+    this.status = "playing";
   }
 
   playAgain() {
     this.game = null;
     this.gameType = null;
-    this.status = 'waiting';
-    this.players.forEach(p => {
+    this.status = "waiting";
+    this.players.forEach((p) => {
       p.penalties = 0;
       p.gorgees = 0;
     });
@@ -90,7 +93,7 @@ class GameRoom {
       players: this.getPlayers(),
       gameType: this.gameType,
       status: this.status,
-      gameState: this.game ? this.game.getState() : null
+      gameState: this.game ? this.game.getState() : null,
     };
   }
 }

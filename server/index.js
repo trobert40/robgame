@@ -8,14 +8,29 @@ const GameRoom = require('./GameRoom');
 
 const app = express();
 const server = http.createServer(app);
+
+const allowedOrigins = [
+  "https://robgame.fr",
+  "http://localhost:3000",
+  "http://localhost:3001"
+];
+
+const corsOptions = {
+  origin: (origin, callback) => {
+    if (allowedOrigins.includes(origin) || !origin) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  methods: ['GET', 'POST']
+};
+
 const io = socketIO(server, {
-  cors: {
-    origin: '*',
-    methods: ['GET', 'POST']
-  }
+  cors: corsOptions
 });
 
-app.use(cors());
+app.use(cors(corsOptions));
 app.use(express.json());
 
 // Serve static files from React app
