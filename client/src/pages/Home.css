@@ -115,11 +115,11 @@
 
 .btn-secondary {
   background: var(--rust-brown);
-  color: white;
+  color: var(--midnight-violet);
 }
 
 .btn-secondary:hover {
-  background: var(--dark-garnet);
+  background: var(--lime-cream);
 }
 
 @media (max-width: 600px) {

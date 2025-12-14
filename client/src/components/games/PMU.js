@@ -4,7 +4,7 @@ import { useSocket } from '../../hooks/useSocket';
 import './PMU.css';
 
 const PMU = ({ gameState }) => {
-  const { sendGameAction, roomData, playAgain, leaveRoom, socket } = useSocket();
+  const { sendGameAction, playAgain, leaveRoom, socket } = useSocket();
   const navigate = useNavigate();
   const [selectedHorse, setSelectedHorse] = useState(null);
   const [betAmount, setBetAmount] = useState(1);
