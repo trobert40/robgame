@@ -19,8 +19,6 @@ export const Lobby = () => {
     return <div className="loading">Chargement...</div>;
   }
 
-  const qrValue = `${window.location.origin}?joinCode=${currentRoom}`;
-
   const isHost = roomData?.players.find(p => p.id === socket?.id)?.isHost;
 
   const handleStartPMU = () => {
