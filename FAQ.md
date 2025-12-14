@@ -164,7 +164,6 @@
 
 ### Q: QR code ne s'affiche pas
 **R:**
-- Vérifiez que `qrcode.react` est installé
 - npm install (si besoin)
 - Redémarrez le client
 

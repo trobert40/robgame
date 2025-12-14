@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import QRCode from 'qrcode.react';
 import { useSocket } from '../hooks/useSocket';
 import './Lobby.css';
 
@@ -38,11 +37,6 @@ export const Lobby = () => {
         <h1>Salle de jeu</h1>
         <div className="code-display">
           Code: <strong>{currentRoom}</strong>
-        </div>
-
-        <div className="qr-section">
-          <h3>Scannez pour rejoindre</h3>
-          <QRCode value={qrValue} size={200} />
         </div>
 
         <div className="players-section">
