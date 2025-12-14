@@ -19,7 +19,13 @@ const allowedOrigins = [
 
 const corsOptions = {
   origin: (origin, callback) => {
-    if (!origin || allowedOrigins.includes(origin) || origin.startsWith("http://localhost:")) {
+    if (
+      !origin ||
+      allowedOrigins.includes(origin) ||
+      origin.startsWith("http://localhost:") ||
+      origin.startsWith("http://192.168.") ||
+      origin.startsWith("http://10.")
+    ) {
       callback(null, true);
     } else {
       callback(new Error("Not allowed by CORS"));

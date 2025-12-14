@@ -1,5 +1,4 @@
 .lobby-container {
-  position: fixed;
   top: 0;
   left: 0;
   width: 100%;
@@ -44,13 +43,13 @@
 }
 
 .lobby-content {
-  max-width: 900px;
-  margin: 0 auto;
-  background: #ffffff;
-  border: 1px solid #e0e0e0;
-  border-radius: 20px;
-  padding: 40px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  padding: 1rem;
+  min-width: 256px;
+  min-height: 256px;
+  box-shadow: 0px 0px 2px 2px rgba(0, 0, 0, 0.2),
+    0px 4px 2px -2px rgba(255, 255, 255, 0.2) inset,
+    0px -4px 2px -2px rgba(255, 255, 255, 0.2) inset;
+  border-radius: 1rem;
 }
 
 .lobby-content h1 {
@@ -171,8 +170,8 @@
 .game-card p {
   color: var(--lime-cream);
   opacity: 0.7;
-  margin-bottom: 20px;
-  font-size: 0.95em;
+  margin-bottom: 10px;
+  font-size: 2em;
 }
 
 .btn-game {
@@ -208,4 +207,65 @@
   .players-list {
     grid-template-columns: 1fr;
   }
+}
+
+.game-card-button {
+  position: relative;
+  display: inline-block;
+  border: none;
+  background: none;
+  padding: 0;
+  cursor: pointer;
+  border-radius: 15px;
+  overflow: hidden; /* This will make the image corners rounded */
+  width: 100%; /* Take full width of the grid cell */
+  height: 200px; /* Let's give it a fixed height */
+  color: white;
+}
+
+.game-card-button img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* This will make the image fill the button */
+  transition: transform 0.3s ease;
+  z-index: 1;
+}
+
+.game-card-button::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.4); /* Dark overlay */
+  z-index: 2;
+}
+
+.game-card-button:hover img {
+  transform: scale(1.05);
+}
+
+.game-card-button .game-title {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  font-size: 24px;
+  font-weight: bold;
+  text-shadow: 2px 2px 4px black;
+  text-align: left;
+  z-index: 3;
+}
+
+.game-card-button .game-description {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  right: 20px;
+  text-shadow: 1px 1px 2px black;
+  text-align: left;
+  z-index: 3;
 }

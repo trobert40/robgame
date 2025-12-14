@@ -1,7 +1,7 @@
-import React, { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useSocket } from '../hooks/useSocket';
-import './Lobby.css';
+import React, { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { useSocket } from "../hooks/useSocket";
+import "./Lobby.css";
 
 export const Lobby = () => {
   const navigate = useNavigate();
@@ -9,8 +9,8 @@ export const Lobby = () => {
 
   useEffect(() => {
     if (socket) {
-      socket.on('gameStarted', (data) => {
-        navigate('/game');
+      socket.on("gameStarted", (data) => {
+        navigate("/game");
       });
     }
   }, [socket, navigate]);
@@ -19,14 +19,14 @@ export const Lobby = () => {
     return <div className="loading">Chargement...</div>;
   }
 
-  const isHost = roomData?.players.find(p => p.id === socket?.id)?.isHost;
+  const isHost = roomData?.players.find((p) => p.id === socket?.id)?.isHost;
 
   const handleStartPMU = () => {
-    startGame('pmu');
+    startGame("pmu");
   };
 
   const handleStartPurple = () => {
-    startGame('purple');
+    startGame("purple");
   };
 
   return (
@@ -42,8 +42,12 @@ export const Lobby = () => {
           <ul className="players-list">
             {roomData.players.map((player) => (
               <li key={player.id} className="player-item">
-                <img src={`https://robohash.org/${player.name}?set=set1`} alt={player.name} className="player-photo" />
-                {player.isHost && '👑 '}
+                <img
+                  src={`https://robohash.org/${player.name}?set=set1`}
+                  alt={player.name}
+                  className="player-photo"
+                />
+                {player.isHost && "👑 "}
                 {player.name}
               </li>
             ))}
@@ -54,13 +58,14 @@ export const Lobby = () => {
           <div className="games-section">
             <h2>Choisir un jeu</h2>
             <div className="games-grid">
-              <div className="game-card">
-                <h3>🐴 PMU</h3>
-                <p>Pariez sur les chevaux et regardez-les avancer!</p>
-                <button onClick={handleStartPMU} className="btn-game">
-                  Démarrer PMU
-                </button>
-              </div>
+              <button onClick={handleStartPMU} className="game-card-button">
+                <img src="/assets/jeux/pmu.png" alt="PMU Game" />
+                <span className="game-title">PMU</span>
+                <p className="game-description">
+                  Pariez sur les chevaux et regardez-les avancer!
+                </p>
+              </button>
+
               <div className="game-card">
                 <h3>🟣 Purple</h3>
                 <p>Devinez la couleur ou la valeur de la prochaine carte</p>
