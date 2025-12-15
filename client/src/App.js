@@ -4,16 +4,18 @@ import { SocketProvider, SocketContext } from './contexts/SocketContext';
 import { Home } from './pages/Home';
 import { Lobby } from './pages/Lobby';
 import { Game } from './pages/Game';
+import { MessagePopup } from './components/MessagePopup';
 import PenaltyModal from './components/PenaltyModal';
 import './App.css';
 
 function AppContent() {
-  const { penalty, closePenaltyModal, isChatVisible, toggleChatVisibility, currentRoom } = useContext(SocketContext);
+  const { penalty, closePenaltyModal, isChatVisible, toggleChatVisibility, currentRoom, popupMessage } = useContext(SocketContext);
   const [searchParams] = useSearchParams();
   const joinCode = searchParams.get('joinCode');
 
   return (
     <>
+      <MessagePopup message={popupMessage} />
       <Routes>
         <Route path="/" element={<Home joinCode={joinCode} />} />
         <Route path="/lobby" element={<Lobby />} />

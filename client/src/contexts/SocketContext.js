@@ -1,4 +1,4 @@
-import React, { createContext, useState, useEffect, useCallback } from "react";
+import React, { createContext, useState, useEffect, useCallback, useRef } from "react";
 import io from "socket.io-client";
 
 export const SocketContext = createContext();
@@ -11,6 +11,12 @@ export const SocketProvider = ({ children }) => {
   const [messages, setMessages] = useState([]);
   const [penalty, setPenalty] = useState(null);
   const [isChatVisible, setIsChatVisible] = useState(false);
+  const [popupMessage, setPopupMessage] = useState(null);
+
+  const isChatVisibleRef = useRef(isChatVisible);
+  useEffect(() => {
+    isChatVisibleRef.current = isChatVisible;
+  }, [isChatVisible]);
 
   const toggleChatVisibility = () => setIsChatVisible(prev => !prev);
 
@@ -75,6 +81,12 @@ export const SocketProvider = ({ children }) => {
 
     newSocket.on("newMessage", (messageData) => {
       setMessages((prev) => [...prev, messageData]);
+      if (!isChatVisibleRef.current) {
+        setPopupMessage(messageData);
+        setTimeout(() => {
+          setPopupMessage(null);
+        }, 3000);
+      }
     });
 
     newSocket.on("penalty_received", (data) => {
@@ -187,6 +199,7 @@ export const SocketProvider = ({ children }) => {
     playAgain,
     isChatVisible,
     toggleChatVisibility,
+    popupMessage,
   };
 
   return (
