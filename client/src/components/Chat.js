@@ -3,9 +3,8 @@ import { useSocket } from '../hooks/useSocket';
 import './Chat.css';
 
 export const Chat = () => {
-  const { messages, sendMessage, socket, roomData } = useSocket();
+  const { messages, sendMessage, socket, roomData, isChatVisible } = useSocket();
   const [newMessage, setNewMessage] = useState('');
-  const [isChatOpen, setIsChatOpen] = useState(false);
   const messagesEndRef = useRef(null);
 
   const getPlayerPhoto = (senderId, senderName) => {
@@ -21,10 +20,10 @@ export const Chat = () => {
   };
 
   useEffect(() => {
-    if (isChatOpen) {
+    if (isChatVisible) {
       scrollToBottom();
     }
-  }, [messages, isChatOpen]);
+  }, [messages, isChatVisible]);
 
   const handleSendMessage = (e) => {
     e.preventDefault();
@@ -35,11 +34,8 @@ export const Chat = () => {
   };
 
   return (
-    <div className={`chat-container ${isChatOpen ? 'open' : 'closed'}`}>
-      <button className="chat-toggle-button" onClick={() => setIsChatOpen(!isChatOpen)}>
-        {isChatOpen ? 'Fermer' : 'Ouvrir'} le Chat
-      </button>
-      {isChatOpen && (
+    <div className={`chat-container ${isChatVisible ? 'open' : 'closed'}`}>
+      {isChatVisible && (
         <>
           <div className="messages-list">
             {messages.map((msg) => (

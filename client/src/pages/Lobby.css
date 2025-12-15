@@ -54,14 +54,14 @@
 
 .lobby-content h1 {
   text-align: center;
-  color: var(--rust-brown);
+  color: rgb(45, 45, 45);
   margin-bottom: 20px;
-  font-size: 2.5em;
+  font-size: 3em;
 }
 
 .code-display {
   text-align: center;
-  background: var(--light-grey-background);
+  background: rgba(232, 213, 255, 0.7);
   padding: 15px;
   border-radius: 10px;
   margin-bottom: 30px;
@@ -70,7 +70,7 @@
 }
 
 .code-display strong {
-  color: var(--rust-brown);
+  color: rgb(0, 131, 219);
   font-size: 1.5em;
   font-weight: 800;
   letter-spacing: 2px;
@@ -99,6 +99,7 @@
 .players-section h2 {
   color: var(--lime-cream);
   margin-bottom: 15px;
+  font-size: 2em;
 }
 
 .players-list {
@@ -110,7 +111,7 @@
 }
 
 .player-item {
-  background: var(--light-grey-background);
+  background: rgba(235, 222, 251, 0.333);
   padding: 15px;
   border-radius: 10px;
   border-left: 4px solid var(--medium-jungle);
@@ -121,10 +122,19 @@
   gap: 10px;
 }
 
-.player-photo {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
+.player-name {
+  font-size: 1.2em;
+}
+
+.player-name-lobby {
+  font-size: 1.2em;
+  margin-bottom: 20px;
+}
+
+.player-photo-lobby {
+  width: 60px;
+  height: 60px;
+  border-radius: 100%;
   object-fit: cover;
 }
 
@@ -135,7 +145,9 @@
 
 .games-section h2 {
   color: var(--lime-cream);
+
   margin-bottom: 20px;
+  font-size: 30px;
   text-align: center;
 }
 
@@ -251,13 +263,15 @@
 
 .game-card-button .game-title {
   position: absolute;
-  top: 20px;
-  left: 20px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%); /* centre parfaitement */
   font-size: 24px;
   font-weight: bold;
+  color: rgb(193, 193, 193);
   text-shadow: 2px 2px 4px black;
-  text-align: left;
   z-index: 3;
+  pointer-events: none;
 }
 
 .game-card-button .game-description {

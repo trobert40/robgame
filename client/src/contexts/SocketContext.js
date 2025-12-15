@@ -10,6 +10,9 @@ export const SocketProvider = ({ children }) => {
   const [roomData, setRoomData] = useState(null);
   const [messages, setMessages] = useState([]);
   const [penalty, setPenalty] = useState(null);
+  const [isChatVisible, setIsChatVisible] = useState(false);
+
+  const toggleChatVisibility = () => setIsChatVisible(prev => !prev);
 
   const closePenaltyModal = () => setPenalty(null);
 
@@ -182,6 +185,8 @@ export const SocketProvider = ({ children }) => {
     leaveRoom,
     sendMessage,
     playAgain,
+    isChatVisible,
+    toggleChatVisibility,
   };
 
   return (

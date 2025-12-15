@@ -28,3 +28,19 @@ code {
 * {
   box-sizing: border-box;
 }
+
+.chat-visibility-toggle {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  z-index: 1001;
+  padding: 0;
+}
+
+.chat-visibility-toggle img {
+  width: 40px;
+  height: 40px;
+}

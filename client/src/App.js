@@ -8,7 +8,7 @@ import PenaltyModal from './components/PenaltyModal';
 import './App.css';
 
 function AppContent() {
-  const { penalty, closePenaltyModal } = useContext(SocketContext);
+  const { penalty, closePenaltyModal, isChatVisible, toggleChatVisibility, currentRoom } = useContext(SocketContext);
   const [searchParams] = useSearchParams();
   const joinCode = searchParams.get('joinCode');
 
@@ -21,6 +21,11 @@ function AppContent() {
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
       <PenaltyModal penalties={penalty} onClose={closePenaltyModal} />
+      {currentRoom && (
+        <button onClick={toggleChatVisibility} className="chat-visibility-toggle">
+          <img src={`/assets/${isChatVisible ? 'Eye-Open' : 'Eye-Slash'}.png`} alt="Toggle Chat" />
+        </button>
+      )}
     </>
   );
 }

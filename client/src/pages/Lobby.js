@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSocket } from "../hooks/useSocket";
+import { Chat } from "../components/Chat";
 import "./Lobby.css";
 
 export const Lobby = () => {
@@ -45,10 +46,12 @@ export const Lobby = () => {
                 <img
                   src={`https://robohash.org/${player.name}?set=set1`}
                   alt={player.name}
-                  className="player-photo"
+                  className="player-photo-lobby"
                 />
-                {player.isHost && "👑 "}
-                {player.name}
+                <p className="player-name">
+                  {player.isHost && "👑 "}
+                  {player.name}
+                </p>
               </li>
             ))}
           </ul>
@@ -61,22 +64,22 @@ export const Lobby = () => {
               <button onClick={handleStartPMU} className="game-card-button">
                 <img src="/assets/jeux/pmu.png" alt="PMU Game" />
                 <span className="game-title">PMU</span>
-                <p className="game-description">
-                  Pariez sur les chevaux et regardez-les avancer!
-                </p>
               </button>
 
-              <div className="game-card">
-                <h3>🟣 Purple</h3>
-                <p>Devinez la couleur ou la valeur de la prochaine carte</p>
-                <button onClick={handleStartPurple} className="btn-game">
-                  Démarrer Purple
+              <div className="game-grid">
+                <button
+                  onClick={handleStartPurple}
+                  className="game-card-button"
+                >
+                  <img src="/assets/jeux/purple.png" alt="Purple Game" />
+                  <span className="game-title">Purple</span>
                 </button>
               </div>
             </div>
           </div>
         )}
       </div>
+      <Chat />
     </div>
   );
 };
