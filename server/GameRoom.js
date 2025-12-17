@@ -2,7 +2,7 @@ const PMUGame = require("./games/PMUGame");
 const PurpleGame = require("./games/PurpleGame");
 
 class GameRoom {
-  constructor(code, hostName, hostId) {
+  constructor(code, hostName, hostId, isPrivate = true) {
     this.code = code;
     this.players = [
       {
@@ -17,6 +17,11 @@ class GameRoom {
     this.gameType = null;
     this.status = "waiting"; // waiting, rules, playing, finished
     this.maxPlayers = 8;
+    this.isPrivate = isPrivate;
+  }
+
+  updatePrivacy(isPrivate) {
+    this.isPrivate = isPrivate;
   }
 
   addPlayer(name, id) {
@@ -94,6 +99,7 @@ class GameRoom {
       gameType: this.gameType,
       status: this.status,
       gameState: this.game ? this.game.getState() : null,
+      isPrivate: this.isPrivate,
     };
   }
 }

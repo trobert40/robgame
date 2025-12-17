@@ -66,7 +66,7 @@ io.on("connection", (socket) => {
       roomCode = Math.random().toString(36).substring(2, 8).toUpperCase();
     } while (rooms.has(roomCode));
 
-    const room = new GameRoom(roomCode, playerName, socket.id);
+    const room = new GameRoom(roomCode, playerName, socket.id, false); // public by default
     rooms.set(roomCode, room);
 
     socket.join(roomCode);
@@ -75,6 +75,35 @@ io.on("connection", (socket) => {
 
     console.log(`Room created: ${roomCode} by ${playerName}`);
     callback({ success: true, roomCode, roomData: room.getState() });
+  });
+
+  socket.on("getPublicRooms", (callback) => {
+    const publicRooms = [];
+    for (const [roomCode, room] of rooms.entries()) {
+      if (!room.isPrivate) {
+        const host = room.players.find((p) => p.isHost);
+        publicRooms.push({
+          roomCode: room.code,
+          playerCount: room.players.length,
+          hostName: host ? host.name : "N/A",
+        });
+      }
+    }
+    callback(publicRooms);
+  });
+
+  socket.on("updateRoomPrivacy", (isPrivate) => {
+    const roomCode = socket.currentRoom;
+    if (roomCode) {
+      const room = rooms.get(roomCode);
+      if (room) {
+        const player = room.getPlayer(socket.id);
+        if (player && player.isHost) {
+          room.updatePrivacy(isPrivate);
+          io.to(roomCode).emit("roomStateUpdated", room.getState());
+        }
+      }
+    }
   });
 
   // Join an existing room

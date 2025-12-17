@@ -1,17 +1,30 @@
-import React, { useContext } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate, useSearchParams } from 'react-router-dom';
-import { SocketProvider, SocketContext } from './contexts/SocketContext';
-import { Home } from './pages/Home';
-import { Lobby } from './pages/Lobby';
-import { Game } from './pages/Game';
-import { MessagePopup } from './components/MessagePopup';
-import PenaltyModal from './components/PenaltyModal';
-import './App.css';
+import React, { useContext } from "react";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+  useSearchParams,
+} from "react-router-dom";
+import { SocketProvider, SocketContext } from "./contexts/SocketContext";
+import { Home } from "./pages/Home";
+import { Lobby } from "./pages/Lobby";
+import { Game } from "./pages/Game";
+import { MessagePopup } from "./components/MessagePopup";
+import PenaltyModal from "./components/PenaltyModal";
+import "./App.css";
 
 function AppContent() {
-  const { penalty, closePenaltyModal, isChatVisible, toggleChatVisibility, currentRoom, popupMessage } = useContext(SocketContext);
+  const {
+    penalty,
+    closePenaltyModal,
+    isChatVisible,
+    toggleChatVisibility,
+    currentRoom,
+    popupMessage,
+  } = useContext(SocketContext);
   const [searchParams] = useSearchParams();
-  const joinCode = searchParams.get('joinCode');
+  const joinCode = searchParams.get("joinCode");
 
   return (
     <>
@@ -24,8 +37,18 @@ function AppContent() {
       </Routes>
       <PenaltyModal penalties={penalty} onClose={closePenaltyModal} />
       {currentRoom && (
-        <button onClick={toggleChatVisibility} className="chat-visibility-toggle">
-          <img src={`/assets/${isChatVisible ? 'Eye-Open' : 'Eye-Slash'}.png`} alt="Toggle Chat" />
+        <button
+          onClick={toggleChatVisibility}
+          className="chat-visibility-toggle"
+        >
+          <img
+            src={`${
+              isChatVisible
+                ? "https://raw.githubusercontent.com/trobert40/robgame/refs/heads/main/client/public/assets/Eye-slash"
+                : "https://raw.githubusercontent.com/trobert40/robgame/refs/heads/main/client/public/assets/Eye-open"
+            }.png`}
+            alt="Toggle Chat"
+          />
         </button>
       )}
     </>

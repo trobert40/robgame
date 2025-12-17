@@ -139,3 +139,29 @@
     width: 100%;
   }
 }
+
+.public-rooms-list {
+  margin-top: 20px;
+}
+.public-rooms-list h3 {
+  color: var(--lime-cream);
+}
+.public-rooms-list ul {
+  list-style: none;
+  padding: 0;
+  max-height: 150px;
+  overflow-y: auto;
+}
+.public-rooms-list li {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 10px;
+  border-radius: 5px;
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: space-between;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.public-rooms-list li:hover {
+  background: rgba(255, 255, 255, 0.2);
+}

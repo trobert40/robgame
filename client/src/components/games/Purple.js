@@ -64,15 +64,19 @@ const Purple = ({ gameState }) => {
   };
 
   const predictions = [
-    { key: "rouge", label: "Rouge", emoji: "🔴", color: "red" },
-    { key: "noir", label: "Noir", emoji: "⚫", color: "black" },
     {
-      key: "purple",
-      label: "Purple",
-      emoji: "🟣",
-      description:
-        "Couleur différente de la précédente. Compte pour 2 succès !",
+      key: "rouge",
+      label: "Rouge",
+      class: "pred-rouge",
+      color: "red",
     },
+    {
+      key: "noir",
+      label: "Noir",
+      class: "pred-noir",
+      color: "black",
+    },
+    { key: "purple", label: "Purple", class: "pred-purple" },
   ];
 
   const handlePredict = async (predictionKey) => {
@@ -100,6 +104,7 @@ const Purple = ({ gameState }) => {
   }
 
   const currentPlayer = gameState.currentPlayer;
+  const isMyTurn = currentPlayer?.id === socket?.id;
 
   const renderPenaltySummary = () => (
     <div className="players-penalties">
@@ -108,7 +113,11 @@ const Purple = ({ gameState }) => {
         {gameState.players &&
           gameState.players.map((player) => (
             <div key={player.id} className="penalty-item">
-              <img src={`https://robohash.org/${player.name}?set=set1`} alt={player.name} className="player-photo" />
+              <img
+                src={`https://robohash.org/${player.name}?set=set1`}
+                alt={player.name}
+                className="player-photo"
+              />
               <span>{player.name}</span>
               <span className="penalty-badge">
                 {player.penalties} gorgée(s)
@@ -145,94 +154,73 @@ const Purple = ({ gameState }) => {
         </div>
       )}
 
-      <div className="purple-board">
-        <h1 className="purple-title">🟣 Purple - Devinez la Carte</h1>
+      <h1 className="purple-title">Purple</h1>
 
-        {/* Current Player Section */}
-        <div className="current-player-section">
-          <h2>Joueur actuel</h2>
-          <div className="current-player-card">
-            <img src={`https://robohash.org/${currentPlayer?.name}?set=set1`} alt={currentPlayer?.name} className="player-photo" />
-            <span className="player-name">{currentPlayer?.name}</span>
-            <span className="consecutive-badge">
-              {gameState.consecutiveCorrect || 0} bonnes réponses
-            </span>
-          </div>
-          <p style={{ marginTop: "10px", fontStyle: "italic", opacity: 0.8 }}>
-            Objectif : Enchaînez 2 succès pour passer la main. Un Purple correct
-            compte double !
-          </p>
+      {/* Current Player Section */}
+      <div className="current-player-section">
+        <h2>Au tour de</h2>
+
+        <img
+          src={`https://robohash.org/${currentPlayer?.name}?set=set1`}
+          alt={currentPlayer?.name}
+          className="player-photo-Game"
+        />
+        <p className="player-name-Game">{currentPlayer?.name}</p>
+      </div>
+
+      <div className="cards-section">
+        {/* GROUPE GAUCHE : Nombre restants + Dos de carte */}
+        <div className="card-group left-group">
+          <span className="card-count">{gameState.cardsRemaining}</span>
+          <img
+            src="/assets/dos-bleu.svg"
+            alt="Deck"
+            className="card-image deck"
+          />
         </div>
 
-        {/* Cards Display */}
-        <div className="cards-section">
-          <div className="card-container">
-            {gameState.currentCard ? (
-              <img
-                src={getCardImage(gameState.currentCard)}
-                alt={
-                  gameState.currentCard
-                    ? `${gameState.currentCard.value} of ${gameState.currentCard.suit}`
-                    : "Carte précédente"
-                }
-                className="card-image"
-              />
-            ) : (
-              <div className="card empty">
-                <span>Carte précédente</span>
-              </div>
-            )}
-          </div>
-
-          <div className="stacked-cards-info">
-            <h3>Cartes empilées: {currentPlayer?.stackedCards.length || 0}</h3>
-            <div className="stacked-cards-list">
-              {currentPlayer?.stackedCards.slice(-3).map((card, idx) => (
-                <img
-                  key={idx}
-                  src={getCardImage(card)}
-                  alt={card ? `${card.value} of ${card.suit}` : "Card in stack"}
-                  className="card-mini-image"
-                />
-              ))}
+        {/* GROUPE DROITE : Carte actuelle + Nombre empilé */}
+        <div className="card-group right-group">
+          {gameState.currentCard ? (
+            <img
+              src={getCardImage(gameState.currentCard)}
+              alt={`${gameState.currentCard.value} of ${gameState.currentCard.suit}`}
+              className="card-image"
+            />
+          ) : (
+            <div className="card empty">
+              <span>Vide</span>
             </div>
-          </div>
-        </div>
+          )}
 
-        {/* Predictions or Results */}
-        {gameState.stage === "playing" && (
-          <div className="predictions-section">
-            <h2>Prédictions disponibles</h2>
-            <div className="predictions-grid">
-              {predictions.map((pred) => (
-                <button
-                  key={pred.key}
-                  onClick={() => handlePredict(pred.key)}
-                  className="prediction-btn"
-                  disabled={!currentPlayer || currentPlayer.id !== socket?.id}
-                >
-                  <span className="pred-emoji">{pred.emoji}</span>
-                  <span className="pred-label">{pred.label}</span>
-                  {pred.description && (
-                    <span className="pred-desc">{pred.description}</span>
-                  )}
-                </button>
-              ))}
-            </div>
-
-            {gameState.canPass && currentPlayer?.id === socket?.id && (
-              <button onClick={handlePass} className="btn-pass">
-                Passer au joueur suivant
-              </button>
-            )}
-          </div>
-        )}
-
-        {/* Cards Remaining */}
-        <div className="info-bar">
-          <span>Cartes restantes: {gameState.cardsRemaining}</span>
+          <span className="card-count">
+            {currentPlayer?.stackedCards.length || 0}
+          </span>
         </div>
       </div>
+
+      {/* Predictions or Results */}
+      {gameState.stage === "playing" && (
+        <div className="predictions-section">
+          <div className="predictions-grid">
+            {predictions.map((pred) => (
+              <button
+                key={pred.key}
+                onClick={() => handlePredict(pred.key)}
+                className={`${pred.class} ${!isMyTurn ? "not-my-turn" : ""}`}
+                disabled={!isMyTurn}
+              >
+                <span className="pred-label">{pred.label}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+      {gameState.canPass && currentPlayer?.id === socket?.id && (
+        <button onClick={handlePass} className="btn-pass">
+          Passer au joueur suivant
+        </button>
+      )}
     </div>
   );
 };

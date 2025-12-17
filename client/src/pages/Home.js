@@ -10,7 +10,10 @@ export const Home = () => {
   const [roomCode, setRoomCode] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
-  const { createRoom, joinRoom, roomData } = useSocket();
+  const { createRoom, joinRoom, roomData, getPublicRooms, connected } =
+    useSocket();
+
+  const [publicRooms, setPublicRooms] = useState([]);
 
   // Naviguez vers le lobby quand roomData est défini
   useEffect(() => {
@@ -18,6 +21,41 @@ export const Home = () => {
       navigate("/lobby");
     }
   }, [roomData, navigate]);
+
+  // new useEffect to fetch public rooms
+  useEffect(() => {
+    let intervalId;
+
+    const fetchPublicRooms = async () => {
+      try {
+        const rooms = await getPublicRooms();
+        setPublicRooms(rooms);
+        setError(""); // Clear error on success
+      } catch (e) {
+        setError("Impossible de récupérer les parties publiques.");
+        if (intervalId) {
+          clearInterval(intervalId);
+        }
+      }
+    };
+
+    if (showJoin) {
+      console.log("Statut de la connexion :", connected);
+      if (connected) {
+        setIsLoading(true);
+        fetchPublicRooms().finally(() => setIsLoading(false));
+        intervalId = setInterval(fetchPublicRooms, 5000); // Poll every 5 seconds
+      } else {
+        setError("Non connecté au serveur.");
+      }
+    }
+
+    return () => {
+      if (intervalId) {
+        clearInterval(intervalId);
+      }
+    };
+  }, [showJoin, getPublicRooms, connected]);
 
   const handleCreateRoom = async () => {
     if (playerName.trim()) {
@@ -31,17 +69,41 @@ export const Home = () => {
     }
   };
 
-  const handleJoinRoom = async () => {
-    if (playerName.trim() && roomCode.trim()) {
+  const handleJoinRoom = async (code) => {
+    const codeToJoin = code || roomCode;
+    if (playerName.trim() && codeToJoin.trim()) {
       setIsLoading(true);
       setError("");
-      const response = await joinRoom(roomCode, playerName);
+      const response = await joinRoom(codeToJoin.toUpperCase(), playerName);
       if (!response.success) {
         setError(response.error || "Impossible de rejoindre la partie.");
       }
       setIsLoading(false);
     }
   };
+
+  const renderPublicRooms = () => (
+    <div className="public-rooms-list">
+      <h3>Parties publiques</h3>
+      {publicRooms.length > 0 ? (
+        <ul>
+          {publicRooms.map((room) => (
+            <li
+              key={room.roomCode}
+              onClick={() => handleJoinRoom(room.roomCode)}
+            >
+              <span>Salon de {room.hostName}</span>
+              <span>
+                {room.playerCount} joueur(s)
+              </span>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p>Aucune partie publique en cours.</p>
+      )}
+    </div>
+  );
 
   return (
     <div className="home-container">
@@ -93,7 +155,7 @@ export const Home = () => {
             <button
               onClick={handleCreateRoom}
               className="btn btn-primary"
-              disabled={isLoading}
+              disabled={isLoading || !playerName.trim()}
             >
               {isLoading ? "Création..." : "➕ Créer une partie"}
             </button>
@@ -119,9 +181,9 @@ export const Home = () => {
             />
             <div className="button-group">
               <button
-                onClick={handleJoinRoom}
+                onClick={() => handleJoinRoom()}
                 className="btn btn-primary"
-                disabled={isLoading}
+                disabled={isLoading || !playerName.trim() || !roomCode.trim()}
               >
                 {isLoading ? "Connexion..." : "✓ Rejoindre"}
               </button>
@@ -133,9 +195,11 @@ export const Home = () => {
                 ← Retour
               </button>
             </div>
+            {renderPublicRooms()}
           </div>
         )}
       </div>
     </div>
   );
 };
+

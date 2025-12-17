@@ -33,6 +33,18 @@
       40px;
 }
 
+.player-photo-Game {
+  width: 60px;
+  height: 60px;
+  border-radius: 100%;
+  object-fit: cover;
+}
+
+.player-name-Game {
+  font-size: 1.2em;
+  margin-bottom: 20px;
+}
+
 .loading {
   display: flex;
   align-items: center;
@@ -51,17 +63,13 @@
   z-index: 100;
 }
 
-.btn-leave {
-  padding: 10px 15px;
-  background-color: var(--dark-garnet);
-  color: white;
-  border: none;
-  border-radius: 5px;
+.back-button {
+  width: 50px;
+  height: auto;
   cursor: pointer;
-  font-size: 1rem;
-  transition: background-color 0.2s;
+  transition: transform 0.2s ease-in-out;
 }
 
-.btn-leave:hover {
-  background-color: var(--rust-brown);
+.back-button:hover {
+  transform: scale(1.1);
 }

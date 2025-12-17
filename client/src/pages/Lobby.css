@@ -1,14 +1,11 @@
 .lobby-container {
+  position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
   overflow-y: auto;
-  display: grid;
-  justify-content: center;
-  align-items: center;
   padding: 2rem;
-  background-attachment: fixed;
   background: linear-gradient(
       0deg,
       transparent 0%,
@@ -50,6 +47,8 @@
     0px 4px 2px -2px rgba(255, 255, 255, 0.2) inset,
     0px -4px 2px -2px rgba(255, 255, 255, 0.2) inset;
   border-radius: 1rem;
+  max-width: 960px;
+  margin: 2rem auto;
 }
 
 .lobby-content h1 {
@@ -282,4 +281,38 @@
   text-shadow: 1px 1px 2px black;
   text-align: left;
   z-index: 3;
+}
+
+.lobby-header {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  z-index: 100;
+}
+
+.back-button {
+  width: 50px;
+  height: auto;
+  cursor: pointer;
+  transition: transform 0.2s ease-in-out;
+}
+
+.back-button:hover {
+  transform: scale(1.1);
+}
+
+.game-in-progress {
+  text-align: center;
+  padding: 20px;
+  background: rgba(255, 239, 213, 0.8);
+  border-radius: 10px;
+  margin-bottom: 20px;
+  color: var(--lime-cream);
+}
+
+.privacy-toggle-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
 }

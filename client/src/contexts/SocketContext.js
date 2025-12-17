@@ -116,6 +116,27 @@ export const SocketProvider = ({ children }) => {
     [socket]
   );
 
+  const updateRoomPrivacy = useCallback((isPrivate) => {
+    socket?.emit("updateRoomPrivacy", isPrivate);
+  }, [socket]);
+
+  const getPublicRooms = useCallback(() => {
+    return new Promise((resolve, reject) => {
+      if (!socket || !connected) {
+        return reject(new Error("Socket not connected"));
+      }
+
+      const timeout = setTimeout(() => {
+        reject(new Error("Request timed out"));
+      }, 5000); // 5s timeout
+
+      socket.emit("getPublicRooms", (rooms) => {
+        clearTimeout(timeout);
+        resolve(rooms);
+      });
+    });
+  }, [socket, connected]);
+
   const joinRoom = useCallback(
     (roomCode, playerName) => {
       return new Promise((resolve) => {
@@ -182,6 +203,14 @@ export const SocketProvider = ({ children }) => {
     socket?.emit("playAgain");
   }, [socket]);
 
+  const backToLobby = useCallback(() => {
+    socket?.emit("backToLobby");
+  }, [socket]);
+
+  const rejoinGame = useCallback(() => {
+    socket?.emit("rejoinGame");
+  }, [socket]);
+
   const value = {
     socket,
     connected,
@@ -191,12 +220,16 @@ export const SocketProvider = ({ children }) => {
     penalty,
     closePenaltyModal,
     createRoom,
+    getPublicRooms,
+    updateRoomPrivacy,
     joinRoom,
     startGame,
     sendGameAction,
     leaveRoom,
     sendMessage,
     playAgain,
+    backToLobby,
+    rejoinGame,
     isChatVisible,
     toggleChatVisibility,
     popupMessage,

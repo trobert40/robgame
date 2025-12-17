@@ -1,26 +1,35 @@
-import React, { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useSocket } from '../hooks/useSocket';
-import PMU from '../components/games/PMU';
-import Purple from '../components/games/Purple';
-import { Chat } from '../components/Chat';
-import './Game.css';
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useSocket } from "../hooks/useSocket";
+import PMU from "../components/games/PMU";
+import Purple from "../components/games/Purple";
+import { Chat } from "../components/Chat";
+import ConfirmationModal from "../components/ConfirmationModal";
+import "./Game.css";
 
 export const Game = () => {
-  const { roomData, leaveRoom } = useSocket();
+  const { roomData, backToLobby, socket } = useSocket();
   const navigate = useNavigate();
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
 
   useEffect(() => {
-    // If roomData exists and status is 'waiting', it means the game ended
-    // and the host chose to play again, so we go back to the lobby.
-    if (roomData && roomData.status === 'waiting') {
-      navigate('/lobby');
+    if (roomData && roomData.status === "waiting") {
+      navigate("/lobby");
     }
   }, [roomData, navigate]);
 
-  const handleLeave = async () => {
-    await leaveRoom();
-    navigate('/');
+  const handleLeaveGameClick = () => {
+    setShowConfirmModal(true);
+  };
+
+  const handleConfirmLeave = () => {
+    backToLobby();
+    navigate("/lobby");
+    setShowConfirmModal(false);
+  };
+
+  const handleCloseModal = () => {
+    setShowConfirmModal(false);
   };
 
   if (!roomData) {
@@ -32,12 +41,22 @@ export const Game = () => {
   return (
     <div className="game-container">
       <div className="game-header">
-        <button onClick={handleLeave} className="btn-leave">
-          Retour à l'accueil
-        </button>
+        <img
+          src="/assets/back-button.png"
+          alt="Retour au lobby"
+          onClick={handleLeaveGameClick}
+          className="back-button"
+          title="Quitter la partie"
+        />
       </div>
-      {gameType === 'pmu' && <PMU gameState={roomData.gameState} />}
-      {gameType === 'purple' && <Purple gameState={roomData.gameState} />}
+      <ConfirmationModal
+        show={showConfirmModal}
+        onClose={handleCloseModal}
+        onConfirm={handleConfirmLeave}
+        message="Êtes-vous sûr de vouloir quitter la partie ? Vous retournerez au lobby."
+      />
+      {gameType === "pmu" && <PMU gameState={roomData.gameState} />}
+      {gameType === "purple" && <Purple gameState={roomData.gameState} />}
       <Chat />
     </div>
   );

@@ -3,7 +3,7 @@
   max-width: 1000px;
   margin: 0 auto;
   padding: 20px;
-  position: relative; /* For toast positioning */
+  position: absolute;
 }
 
 .penalty-toast {
@@ -30,29 +30,34 @@
   transform: translateX(-50%) translateY(10px);
 }
 
-
 .purple-board {
-  background: #FFFFFF;
-  border: 1px solid #e0e0e0;
-  border-radius: 20px;
-  padding: 40px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-  color: var(--lime-cream);
+  padding: 1rem;
+  min-width: 256px;
+  min-height: 256px;
+  box-shadow: 0px 0px 2px 2px rgba(0, 0, 0, 0.2),
+    0px 4px 2px -2px rgba(255, 255, 255, 0.2) inset,
+    0px -4px 2px -2px rgba(255, 255, 255, 0.2) inset;
+  border-radius: 1rem;
 }
 
 .purple-title {
   text-align: center;
   font-size: 2.5em;
-  margin-bottom: 30px;
-  color: var(--rust-brown);
+  margin-bottom: 10px;
+  color: rgb(59, 0, 67);
 }
 
 .current-player-section {
-  background: var(--light-grey-background);
-  padding: 20px;
-  border-radius: 15px;
-  margin-bottom: 30px;
-  text-align: center;
+  background: rgba(235, 222, 251, 0.333);
+  padding: 15px;
+  border-radius: 10px;
+  border-left: 4px solid var(--medium-jungle);
+  color: var(--lime-cream);
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
 }
 
 .current-player-section h2 {
@@ -86,10 +91,17 @@
 }
 
 .cards-section {
+  min-width: 256px;
+  min-height: 256px;
+  box-shadow: 0px 0px 2px 2px rgba(0, 0, 0, 0.2),
+    0px 4px 2px -2px rgba(255, 255, 255, 0.2) inset,
+    0px -4px 2px -2px rgba(255, 255, 255, 0.2) inset;
+  border-radius: 1rem;
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 30px;
-  margin-bottom: 40px;
+  margin-bottom: 10px;
+  padding: 5px;
 }
 
 .card-container {
@@ -101,6 +113,12 @@
   border-radius: 15px;
 }
 
+.card-count {
+  font-size: 32px;
+  font-weight: 700;
+  color: #000;
+}
+
 .card {
   width: 120px;
   height: 180px;
@@ -109,7 +127,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: 2.5em;
+  font-size: 1em;
   font-weight: 800;
   position: relative;
   background: white;
@@ -128,7 +146,6 @@
   border: 3px solid #000;
 }
 
-
 .card-value {
   font-size: 2em;
 }
@@ -139,9 +156,15 @@
 }
 
 .card.empty {
-  background: #ddd;
-  color: #666;
-  border-color: #999;
+  width: 100px;
+  height: 150px;
+  border-radius: 8px;
+  border: 2px dashed #999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #999;
+  font-size: 12px;
 }
 
 .stacked-cards-info {
@@ -161,6 +184,12 @@
   justify-content: center;
   gap: 10px;
   flex-wrap: wrap;
+}
+
+.card-group {
+  display: flex;
+  align-items: center; /* Aligne le chiffre au centre vertical de la carte */
+  gap: 10px; /* Espace entre le chiffre et la carte */
 }
 
 .card-mini {
@@ -189,10 +218,12 @@
 }
 
 .predictions-section {
-  margin-bottom: 40px;
+  margin-bottom: 10px;
   padding: 30px;
-  background: var(--light-grey-background);
-  border-radius: 15px;
+  box-shadow: 0px 0px 2px 2px rgba(0, 0, 0, 0.2),
+    0px 4px 2px -2px rgba(255, 255, 255, 0.2) inset,
+    0px -4px 2px -2px rgba(255, 255, 255, 0.2) inset;
+  border-radius: 1rem;
 }
 
 .predictions-section h2 {
@@ -201,12 +232,65 @@
 }
 
 .predictions-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  gap: 15px;
-  margin-bottom: 20px;
+  display: flex; /* La clé magique pour l'alignement horizontal */
+  justify-content: center; /* Centre le groupe de boutons au milieu de la page */
+  gap: 2px; /* Espace entre chaque bouton */
+  width: 100%; /* Prend toute la largeur disponible */
+}
+.pred-rouge,
+.pred-noir,
+.pred-purple {
+  border: none;
+  padding: 20px; /* Espace intérieur : hauteur / largeur */
+  border-radius: 12px; /* Bords très arrondis (style "pilule") */
+  font-size: 11px;
+  font-weight: bold;
+  color: white;
+  cursor: pointer;
+  transition: all 0.3s ease; /* Animation douce au survol */
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* Légère ombre portée */
+
+  /* On force une largeur minimale pour qu'ils aient la même taille */
+  min-width: 100px;
+  text-align: center;
 }
 
+/* 3. Couleurs spécifiques (avec légers dégradés pour le relief) */
+
+.pred-rouge {
+  /* Dégradé rouge */
+  background: linear-gradient(135deg, rgb(200, 40, 40), rgb(140, 20, 20));
+}
+
+.pred-noir {
+  /* Dégradé gris foncé vers noir */
+  background: linear-gradient(135deg, rgb(60, 60, 60), rgb(0, 0, 0));
+  border: 1px solid #444; /* Un petit bord discret pour qu'il ne disparaisse pas sur fond sombre */
+}
+
+.pred-purple {
+  /* Dégradé violet */
+  background: linear-gradient(135deg, rgb(150, 60, 180), rgb(100, 35, 120));
+}
+
+/* 4. Effet "Au survol" (Hover) - Pour rendre ça vivant */
+.pred-rouge:hover,
+.pred-noir:hover,
+.pred-purple:hover {
+  transform: translateY(-3px); /* Le bouton monte un peu */
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3); /* L'ombre grandit */
+  filter: brightness(1.1); /* La couleur s'éclaircit légèrement */
+}
+
+/* 5. Effet "Au clic" (Active) */
+.pred-rouge:active,
+.pred-noir:active,
+.pred-purple:active {
+  transform: translateY(1px); /* Le bouton s'enfonce */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
 .prediction-btn {
   padding: 20px;
   border: 2px solid var(--rust-brown);
@@ -344,7 +428,7 @@
 }
 
 .finish-content {
-  background-color: #FFFFFF;
+  background-color: #ffffff;
   color: #333333;
   padding: 40px;
   border-radius: 15px;
@@ -409,10 +493,6 @@
     font-size: 1.8em;
   }
 
-  .cards-section {
-    grid-template-columns: 1fr;
-  }
-
   .current-player-card {
     flex-direction: column;
     gap: 15px;
@@ -424,10 +504,13 @@
 }
 
 .card-image {
-  width: 120px;
-  height: 180px;
-  border-radius: 10px;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  width: 100px; /* Ajuste selon tes besoins */
+  height: 150px; /* Ratio standard carte de poker */
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  background-color: white;
+  object-fit: cover;
+  border: 1px solid #ccc;
 }
 
 .card-mini-image {
@@ -435,4 +518,11 @@
   height: 60px;
   border-radius: 5px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.pred-rouge.not-my-turn,
+.pred-noir.not-my-turn,
+.pred-purple.not-my-turn {
+  filter: brightness(0.4);
+  cursor: not-allowed;
 }
