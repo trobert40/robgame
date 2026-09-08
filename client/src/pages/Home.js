@@ -166,6 +166,15 @@ export const Home = () => {
             >
               🔗 Rejoindre une partie
             </button>
+            <div className="home-divider">
+              <span>OU</span>
+            </div>
+            <button
+              onClick={() => navigate("/solo")}
+              className="btn btn-solo"
+            >
+              🕹️ Mode Solo (Démineur, Solitaire...)
+            </button>
           </div>
         ) : (
           <div className="form-group">

@@ -170,6 +170,16 @@ io.on("connection", (socket) => {
       );
     }
 
+    if (room.players.length < 2) {
+      return (
+        callback &&
+        callback({
+          success: false,
+          error: "Il faut au moins 2 joueurs pour démarrer une partie.",
+        })
+      );
+    }
+
     room.startGame(gameType);
     io.to(socket.currentRoom).emit("gameStarted", {
       gameType,

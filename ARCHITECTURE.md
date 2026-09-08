@@ -99,6 +99,7 @@ app-jeux-soiree/
 ## Flux de Données
 
 ### 1. Création d'une Partie
+
 ```
 Utilisateur entre son pseudo et clique "Créer une partie"
     ↓
@@ -114,6 +115,7 @@ Callback renvoyé au client avec roomCode et roomData
 ```
 
 ### 2. Rejoindre une Partie (Code ou Liste Publique)
+
 ```
 Utilisateur saisit un code à 6 lettres OU clique sur un salon public
     ↓
@@ -129,6 +131,7 @@ Redirection vers /lobby avec affichage en direct des joueurs et avatars Robohash
 ```
 
 ### 3. Démarrage d'une Partie
+
 ```
 L'hôte clique sur un jeu ('pmu', 'purple' ou '99')
     ↓
@@ -144,6 +147,7 @@ Broadcast 'gameStarted' à tous les clients du salon
 ```
 
 ### 4. Actions de Jeu & Synchronisation
+
 ```
 Joueur effectue un coup (pari, carte jouée, prédiction)
     ↓
@@ -161,6 +165,7 @@ L'interface React se re-rend automatiquement
 ```
 
 ### 5. Chat en Direct
+
 ```
 Joueur saisit un message et valide
     ↓
@@ -179,50 +184,51 @@ Affichage dans le chat OU sous forme de notification flottante (MessagePopup) si
 
 ### Client → Server
 
-| Événement | Paramètres | Description |
-| :--- | :--- | :--- |
-| `createRoom` | `playerName` *(string)*, `callback` | Crée un nouveau salon avec un code unique de 6 lettres |
-| `joinRoom` | `roomCode` *(string)*, `playerName` *(string)*, `callback` | Rejoint un salon existant |
-| `getPublicRooms` | `callback` | Récupère la liste des salons publics disponibles |
-| `updateRoomPrivacy` | `isPrivate` *(boolean)* | Bascule la confidentialité du salon (réservé à l'hôte) |
-| `startGame` | `gameType` *(string)*, `callback` | Démarre un jeu (`'pmu'`, `'purple'`, `'99'`) |
-| `gameAction` | `action` *(object)*, `callback` | Transmet une action de jeu au moteur en cours |
-| `sendMessage` | `message` *(string)*, `callback` | Envoie un message dans le chat du salon |
-| `playAgain` | `callback` | Remet le salon en état d'attente (lobby) pour relancer une partie |
-| `leaveRoom` | `callback` | Quitte proprement le salon (réassigne l'hôte si besoin) |
+| Événement           | Paramètres                                                 | Description                                                       |
+| :------------------ | :--------------------------------------------------------- | :---------------------------------------------------------------- |
+| `createRoom`        | `playerName` _(string)_, `callback`                        | Crée un nouveau salon avec un code unique de 6 lettres            |
+| `joinRoom`          | `roomCode` _(string)_, `playerName` _(string)_, `callback` | Rejoint un salon existant                                         |
+| `getPublicRooms`    | `callback`                                                 | Récupère la liste des salons publics disponibles                  |
+| `updateRoomPrivacy` | `isPrivate` _(boolean)_                                    | Bascule la confidentialité du salon (réservé à l'hôte)            |
+| `startGame`         | `gameType` _(string)_, `callback`                          | Démarre un jeu (`'pmu'`, `'purple'`, `'99'`)                      |
+| `gameAction`        | `action` _(object)_, `callback`                            | Transmet une action de jeu au moteur en cours                     |
+| `sendMessage`       | `message` _(string)_, `callback`                           | Envoie un message dans le chat du salon                           |
+| `playAgain`         | `callback`                                                 | Remet le salon en état d'attente (lobby) pour relancer une partie |
+| `leaveRoom`         | `callback`                                                 | Quitte proprement le salon (réassigne l'hôte si besoin)           |
 
 #### Détail des `gameAction` selon le jeu :
 
-* **PMU** :
-  * `{ type: 'placeBet', suit: 'hearts'|'diamonds'|'clubs'|'spades', amount: number }`
-  * `{ type: 'startRace' }` (hôte uniquement)
-  * `{ type: 'drawCard' }`
-* **Purple** :
-  * `{ type: 'predict', prediction: 'rouge'|'noir'|'purple' }`
-  * `{ type: 'pass' }` (si au moins 2 réussites consécutives)
-* **99** :
-  * `{ type: 'playCard', card: Object, chosenValue?: number }` (pour l'As : 1 ou 11 ; pour le Valet : 10 ou -10)
-  * `{ type: 'viewCount' }` (déclenche 1 gorgée de pénalité)
+- **PMU** :
+  - `{ type: 'placeBet', suit: 'hearts'|'diamonds'|'clubs'|'spades', amount: number }`
+  - `{ type: 'startRace' }` (hôte uniquement)
+  - `{ type: 'drawCard' }`
+- **Purple** :
+  - `{ type: 'predict', prediction: 'rouge'|'noir'|'purple' }`
+  - `{ type: 'pass' }` (si au moins 2 réussites consécutives)
+- **99** :
+  - `{ type: 'playCard', card: Object, chosenValue?: number }` (pour l'As : 1 ou 11 ; pour le Valet : 10 ou -10)
+  - `{ type: 'viewCount' }` (déclenche 1 gorgée de pénalité)
 
 ---
 
 ### Server → Client
 
-| Événement | Données reçues | Description |
-| :--- | :--- | :--- |
-| `playerJoined` | `{ roomData, systemMessage }` | Un nouveau joueur a rejoint le salon |
-| `playerLeft` | `{ roomData, systemMessage }` | Un joueur a quitté le salon |
-| `roomStateUpdated`| `roomData` | Mise à jour générale du salon (confidentialité, reset) |
-| `gameStarted` | `{ gameType, roomData }` | La partie commence, déclenche la navigation vers `/game` |
-| `gameStateUpdated`| `roomData` | État complet du jeu mis à jour après une action |
-| `penalty_received`| `{ penalties: Array }` | Notifie le joueur qu'il doit boire ou distribuer des gorgées |
-| `newMessage` | `{ id, senderId, senderName, text, timestamp }` | Réception d'un message de chat |
+| Événement          | Données reçues                                  | Description                                                  |
+| :----------------- | :---------------------------------------------- | :----------------------------------------------------------- |
+| `playerJoined`     | `{ roomData, systemMessage }`                   | Un nouveau joueur a rejoint le salon                         |
+| `playerLeft`       | `{ roomData, systemMessage }`                   | Un joueur a quitté le salon                                  |
+| `roomStateUpdated` | `roomData`                                      | Mise à jour générale du salon (confidentialité, reset)       |
+| `gameStarted`      | `{ gameType, roomData }`                        | La partie commence, déclenche la navigation vers `/game`     |
+| `gameStateUpdated` | `roomData`                                      | État complet du jeu mis à jour après une action              |
+| `penalty_received` | `{ penalties: Array }`                          | Notifie le joueur qu'il doit boire ou distribuer des gorgées |
+| `newMessage`       | `{ id, senderId, senderName, text, timestamp }` | Réception d'un message de chat                               |
 
 ---
 
 ## Modèles d'État (Game State)
 
 ### PMU Game State
+
 ```javascript
 {
   stage: 'betting' | 'racing' | 'finished',
@@ -255,6 +261,7 @@ Affichage dans le chat OU sous forme de notification flottante (MessagePopup) si
 ```
 
 ### Purple Game State
+
 ```javascript
 {
   stage: 'playing' | 'finished',
@@ -279,6 +286,7 @@ Affichage dans le chat OU sous forme de notification flottante (MessagePopup) si
 ```
 
 ### NinetyNine (99) Game State
+
 ```javascript
 {
   stage: 'playing' | 'finished',
@@ -307,6 +315,7 @@ Affichage dans le chat OU sous forme de notification flottante (MessagePopup) si
 ## Modèles de Données
 
 ### Card
+
 ```javascript
 {
   suit: 'hearts' | 'diamonds' | 'clubs' | 'spades',
@@ -318,6 +327,7 @@ Affichage dans le chat OU sous forme de notification flottante (MessagePopup) si
 ```
 
 ### GameRoom
+
 ```javascript
 {
   code: string,                  // 6 lettres majuscules
@@ -335,30 +345,34 @@ Affichage dans le chat OU sous forme de notification flottante (MessagePopup) si
 ## Déploiement & Environnement
 
 ### Production
-* **Frontend** : Hébergé sur **GitHub Pages** via le dossier `/docs/`.
-  * Domaine personnalisé : `https://robgame.fr` (fichier `CNAME` injecté automatiquement depuis `client/public/CNAME`).
-* **Backend** : Hébergé sur un serveur VPS distant (ou conteneur Docker).
-  * URL API : `https://api.robgame.fr`.
-  * Reverse proxy HTTPS configuré avec redirection WebSockets `/socket.io`.
+
+- **Frontend** : Hébergé sur **GitHub Pages** via le dossier `/docs/`.
+  - Domaine personnalisé : `https://robgame.fr` (fichier `CNAME` injecté automatiquement depuis `client/public/CNAME`).
+- **Backend** : Hébergé sur un serveur VPS distant (ou conteneur Docker).
+  - URL API : `https://api.robgame.fr`.
+  - Reverse proxy HTTPS configuré avec redirection WebSockets `/socket.io`.
 
 ### Développement Local
-* **Client** : `http://localhost:3000` (démarré avec `npm run dev:client` ou `npm run dev`).
-* **Serveur** : `http://localhost:3001` (démarré avec `nodemon server/index.js`).
-* Détection automatique de l'URL dans `SocketContext.js` :
+
+- **Client** : `http://localhost:3000` (démarré avec `npm run dev:client` ou `npm run dev`).
+- **Serveur** : `http://localhost:3001` (démarré avec `nodemon server/index.js`).
+- Détection automatique de l'URL dans `SocketContext.js` :
   ```javascript
-  const SERVER_URL = window.location.hostname === "localhost"
-    ? "http://localhost:3001"
-    : "https://api.robgame.fr";
+  const SERVER_URL =
+    window.location.hostname === "localhost"
+      ? "http://localhost:3001"
+      : "https://api.robgame.fr";
   ```
 
 ### Variables d'Environnement
-* Fichier `.env.development` :
+
+- Fichier `.env.development` :
   ```env
   PORT=3001
   NODE_ENV=development
   REACT_APP_SERVER_URL=http://localhost:3001
   ```
-* Fichier `.env.production` :
+- Fichier `.env.production` :
   ```env
   PORT=3001
   NODE_ENV=production

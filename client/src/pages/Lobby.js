@@ -46,16 +46,21 @@ export const Lobby = () => {
   const isGameInProgress = roomData.status === "in_game";
   const self = roomData.players.find((p) => p.id === socket.id);
   const isPlayerInGame = self?.inGame;
+  const hasEnoughPlayers = roomData.players.length >= 2;
+  const canStartGame = !isGameInProgress && hasEnoughPlayers;
 
   const handleStartPMU = () => {
+    if (!canStartGame) return;
     startGame("pmu");
   };
 
   const handleStartPurple = () => {
+    if (!canStartGame) return;
     startGame("purple");
   };
 
   const handleStart99 = () => {
+    if (!canStartGame) return;
     startGame("99");
   };
 
@@ -164,7 +169,7 @@ export const Lobby = () => {
               <button
                 onClick={handleStartPMU}
                 className="game-card-button"
-                disabled={isGameInProgress}
+                disabled={!canStartGame}
               >
                 <img src="/assets/jeux/pmu.png" alt="PMU Game" />
                 <span className="game-title">PMU</span>
@@ -172,7 +177,7 @@ export const Lobby = () => {
               <button
                 onClick={handleStartPurple}
                 className="game-card-button"
-                disabled={isGameInProgress}
+                disabled={!canStartGame}
               >
                 <img src="/assets/jeux/purple.png" alt="Purple Game" />
                 <span className="game-title">Purple</span>
@@ -180,12 +185,17 @@ export const Lobby = () => {
               <button
                 onClick={handleStart99}
                 className="game-card-button"
-                disabled={isGameInProgress}
+                disabled={!canStartGame}
               >
                 <img src="/assets/jeux/99.png" alt="99 Game" />
                 <span className="game-title">99</span>
               </button>
             </div>
+            {!hasEnoughPlayers && (
+              <p className="min-players-warning">
+                ⏳ En attente d'autres joueurs (minimum 2 joueurs requis pour lancer)
+              </p>
+            )}
           </div>
         )}
       </div>
