@@ -1,411 +1,350 @@
+/* src/components/games/PMU.css */
+
+:root {
+  --pmu-bg: #2d5a3f;
+  --pmu-accent: #d4af37;
+  --pmu-text: #ffffff;
+}
+
+/* --- CONTENEUR GLOBAL --- */
 .pmu-container {
   width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 20px;
-}
-
-.pmu-board {
-  background: #FFFFFF;
-  border: 1px solid #e0e0e0;
-  border-radius: 20px;
-  padding: 40px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-  color: var(--lime-cream);
-}
-
-.pmu-title {
-  text-align: center;
-  font-size: 2.5em;
-  color: var(--rust-brown);
-  margin-bottom: 30px;
-}
-
-.horses-section h2 {
-  color: var(--lime-cream);
-  margin-bottom: 20px;
-  font-size: 1.5em;
-}
-
-.horses-track {
+  height: 100%;
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  background: rgba(45, 90, 63, 0.95);
+  /* Texture de fond */
+  background-image: repeating-linear-gradient(
+    45deg,
+    transparent,
+    transparent 10px,
+    rgba(0, 0, 0, 0.05) 10px,
+    rgba(0, 0, 0, 0.05) 20px
+  );
+  font-family: system-ui, -apple-system, sans-serif;
+  color: var(--pmu-text);
+  overflow: hidden; /* Empêche le scroll global */
 }
 
-.horse-lane {
-  display: grid;
-  grid-template-columns: 100px 1fr 60px;
-  gap: 15px;
+/* --- HEADER COMPACT --- */
+.pmu-header {
+  flex: 0 0 auto;
+  display: flex;
   align-items: center;
-  background: var(--light-grey-background);
-  padding: 15px;
-  border-radius: 10px;
-}
-
-.horse-name {
-  font-weight: 600;
-  color: var(--lime-cream);
-}
-
-.race-track {
-  position: relative;
-  background: #e0e0e0;
+  justify-content: flex-end;
+  padding: 4px 8px; /* Très compact pour laisser place au jeu */
   height: 40px;
-  border-radius: 10px;
-  overflow: hidden;
-  border: 1px solid #ccc;
+  background: rgba(0, 0, 0, 0.2);
+  border-bottom: 2px solid var(--pmu-accent);
+  z-index: 10;
 }
 
-.horse-position {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: 1.8em;
-  transition: left 0.5s ease;
-}
-
-.horse-progress {
-  text-align: center;
-  font-weight: 600;
-  color: var(--rust-brown);
-}
-
-.betting-section,
-.racing-section {
-  margin-bottom: 30px;
-  padding: 30px;
-  background: var(--light-grey-background);
-  border-radius: 15px;
-}
-
-.betting-section h2,
-.racing-section h2 {
-  color: var(--lime-cream);
-  margin-bottom: 20px;
-}
-
-.horses-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  gap: 10px;
-  margin-bottom: 20px;
-}
-
-.horse-bet-btn {
-  padding: 15px;
-  border: 2px solid var(--rust-brown);
-  background: transparent;
-  color: var(--rust-brown);
-  border-radius: 10px;
-  cursor: pointer;
-  font-size: 1em;
-  font-weight: 600;
-  transition: all 0.3s ease;
-}
-
-.horse-bet-btn:hover {
-  border-color: var(--medium-jungle);
-  background: var(--medium-jungle);
-  color: var(--light-text);
-}
-
-.horse-bet-btn.selected {
-  background: var(--medium-jungle);
-  color: var(--light-text);
-  border-color: var(--medium-jungle);
-}
-
-.bet-amount-control {
+.deck-info {
+  margin-right: auto;
+  padding-left: 40px; /* Espace pour le bouton retour */
   display: flex;
   align-items: center;
-  gap: 15px;
-  margin-bottom: 20px;
-  padding: 15px;
-  background: var(--light-grey-background);
-  border-radius: 10px;
+  gap: 8px;
 }
 
-.bet-amount-control input {
-  flex: 1;
-  height: 30px;
+.PMU-title {
+  font-size: 1rem;
+  margin: 0;
+  color: var(--pmu-accent);
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
-
-.btn-place-bet {
-  padding: 10px 20px;
-  background: var(--medium-jungle);
-  color: var(--light-text);
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  font-weight: 600;
-  transition: all 0.3s ease;
-}
-
-.btn-place-bet:hover {
-  background: var(--coral-accent);
-}
-
-.btn-finish,
-.btn-draw {
-  width: 100%;
-  padding: 15px;
-  font-size: 1.1em;
-  background: var(--medium-jungle);
-  color: var(--light-text);
-  border: none;
-  border-radius: 10px;
-  cursor: pointer;
-  font-weight: 600;
-  transition: all 0.3s ease;
-}
-
-.btn-finish:hover,
-.btn-draw:hover {
-  transform: translateY(-2px);
-  background: var(--coral-accent);
-}
-
-.players-scores {
-  margin-top: 30px;
-  padding: 20px;
-  background: var(--light-grey-background);
-  border-radius: 10px;
-}
-
-.players-scores h3 {
-  color: var(--lime-cream);
-  margin-bottom: 15px;
-}
-
-.scores-list {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 10px;
-}
-
-.score-item {
-  background: var(--dark-garnet);
-  padding: 15px;
-  border-radius: 8px;
+.deck-placeholder {
+  width: 24px;
+  height: 34px;
   display: flex;
-  justify-content: space-between;
-  border-left: 4px solid var(--medium-jungle);
-  color: var(--lime-cream);
+  align-items: center;
+  justify-content: center;
+}
+.empty-slot {
+  width: 100%;
+  height: 100%;
+  border: 1px dashed rgba(255, 255, 255, 0.5);
+  border-radius: 2px;
+}
+.last-card-label {
+  font-size: 0.75rem;
+  font-weight: bold;
 }
 
-.score-item span:first-child {
-  font-weight: 600;
+/* ==========================================================================
+   LE PLATEAU "ANTI-CROP" (GRID)
+   ========================================================================== */
+
+.pmu-track-area {
+  flex: 1; /* Prend tout l'espace vertical disponible */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+  overflow: hidden;
+  min-height: 0; /* CRUCIAL : Permet au conteneur de rétrécir si besoin */
 }
 
-.score-item span:last-child {
-  font-weight: 600;
+.board-container {
+  /* On définit un ratio de plateau qui ressemble à un écran de téléphone */
+  aspect-ratio: 9 / 16;
+
+  /* Le plateau grandit jusqu'à toucher un bord, puis s'arrête */
+  height: 100%;
+  width: auto;
+  max-width: 100%;
+
+  display: flex;
+  gap: 4px; /* Espace entre la colonne de gauche et la piste */
+  padding: 6px;
+
+  background: rgba(0, 0, 0, 0.25);
+  border-radius: 8px;
+  border: 2px solid rgba(212, 175, 55, 0.4);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
 }
 
-.finish-overlay {
-  position: fixed;
+/* --- LA GRILLE DE GAUCHE (COTES) --- */
+.side-track-column {
+  width: 18%; /* Largeur fixe pour la colonne de gauche */
+  display: grid;
+  grid-template-rows: repeat(7, 1fr); /* 7 cases de hauteur égale */
+  gap: 2px;
+}
+
+/* --- LA GRILLE DE DROITE (PISTE) --- */
+.track-grid {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); /* 4 chevaux */
+  grid-template-rows: repeat(7, 1fr); /* 7 étapes */
+  position: relative;
+  gap: 2px; /* Petit espace entre les cases */
+}
+
+/* Décoration Lignes */
+.track-lines {
+  position: absolute;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.85);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
-  overflow-y: auto;
-  padding: 20px;
-}
-
-.finish-content {
-  background-color: #FFFFFF;
-  color: #333333;
-  padding: 40px;
-  border-radius: 15px;
-  text-align: left;
-  box-shadow: 0 5px 25px rgba(0, 0, 0, 0.1);
-  width: 100%;
-  max-width: 800px;
-}
-
-.finish-content .end-game-actions {
-  margin-top: 30px;
-}
-
-.results-section h2 {
-    text-align: center;
-    font-size: 2em;
-    margin-bottom: 30px;
-    color: var(--rust-brown);
-}
-
-.horse-ranking, .player-penalties {
-    margin-bottom: 30px;
-}
-
-.horse-ranking h3, .player-penalties h3 {
-    font-size: 1.5em;
-    color: var(--rust-brown);
-    border-bottom: 2px solid var(--rust-brown);
-    padding-bottom: 10px;
-    margin-bottom: 15px;
-}
-
-.horse-ranking ul {
-    list-style: none;
-    padding: 0;
-}
-
-.horse-ranking li {
-    font-size: 1.2em;
-    padding: 8px;
-    border-radius: 5px;
-    background-color: var(--light-grey-background);
-    margin-bottom: 8px;
-}
-
-.player-penalty-item {
-    margin-bottom: 20px;
-}
-
-.player-penalty-item h4 {
-    font-size: 1.3em;
-    color: var(--lime-cream);
-}
-
-.player-penalty-item ul {
-    list-style: none;
-    padding-left: 15px;
-}
-
-.player-penalty-item li {
-    font-size: 1.1em;
-    margin-top: 5px;
-}
-
-.player-penalty-item li.distribute {
-    color: #87f542; /* Light green */
-}
-
-.player-penalty-item li.drink {
-    color: #f55d42; /* Light red */
-}
-
-.players-bets-section {
-  margin: 30px 0;
-  padding: 20px;
-  background: var(--light-grey-background);
-  border-radius: 10px;
-}
-
-.players-bets-section h3 {
-  color: var(--lime-cream);
-  margin-bottom: 15px;
-}
-
-.bets-list {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  pointer-events: none;
+}
+.track-line {
+  flex: 1;
+  border-bottom: 1px dashed rgba(255, 255, 255, 0.15);
+  width: 100%;
+}
+.track-line:first-child {
+  background: rgba(212, 175, 55, 0.1);
+  border-bottom: 2px solid var(--pmu-accent);
+}
+.track-line:last-child {
+  border-bottom: none;
 }
 
-.bet-item {
+/* ==========================================================================
+   LES CARTES : LA CORRECTION FINALE
+   ========================================================================== */
+
+/* La case de la grille */
+.side-placeholder,
+.side-step-cell,
+.horse-token {
+  width: 100%;
+  height: 100%;
+
+  /* CRUCIAL : Force le navigateur à ne pas calculer la taille min basée sur l'image */
+  min-width: 0;
+  min-height: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 2;
+}
+
+/* Le wrapper autour de l'image */
+.card-wrapper,
+.side-card-content {
+  width: 100%;
+  height: 100%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  /* Padding minimal pour que la carte ne touche pas les bords de la case */
+  padding: 2px;
+}
+
+/* L'IMAGE ELLE-MÊME */
+.card-image {
+  /* Force l'image à tenir DANS la case sans jamais dépasser ni être coupée */
+  width: 100%;
+  height: 100%;
+  object-fit: contain; /* C'est la clé : voir l'image ENTIÈRE, toujours. */
+
+  display: block;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.6));
+}
+
+/* Numéros */
+.step-number {
+  position: absolute;
+  left: 2px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 0.7em;
+  font-weight: bold;
+  color: rgba(255, 255, 255, 0.5);
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* Animation */
+.horse-token {
+  transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* --- FOOTER --- */
+.pmu-controls {
+  flex: 0 0 auto;
+  padding: 10px;
+  display: flex;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.2);
+  min-height: 60px;
+}
+
+.btn-draw {
+  background: var(--pmu-accent);
+  border: none;
+  padding: 10px 30px;
+  font-size: 1.1rem;
+  font-weight: bold;
+  border-radius: 50px;
+  color: #1e3c2b;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+  animation: pulse 2s infinite;
+  white-space: nowrap;
+}
+
+/* --- OVERLAY --- */
+.game-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 9999;
+  background: rgba(0, 0, 0, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  backdrop-filter: blur(5px);
+}
+.modal-content {
+  background: #fff;
+  color: #333;
+  padding: 20px;
+  border-radius: 12px;
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+  overflow-y: auto;
+  max-height: 90vh;
+}
+.bet-selector {
+  margin-top: 15px;
+}
+.suits-row {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+.suit-choice {
+  font-size: 2rem;
+  background: #f0f0f0;
+  border: 2px solid transparent;
+  border-radius: 8px;
+  padding: 5px 10px;
+  cursor: pointer;
+}
+.suit-choice.selected {
+  border-color: var(--pmu-accent);
+  background: #fff8e1;
+  transform: scale(1.1);
+}
+.amount-row {
   display: flex;
   align-items: center;
   gap: 10px;
-  justify-content: space-between;
-  padding: 10px;
-  background: var(--dark-garnet);
-  border-radius: 5px;
-  border-left: 4px solid var(--medium-jungle);
-}
-
-.player-photo {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  object-fit: cover;
-}
-
-.bet-item.has-bet {
-  border-left-color: var(--medium-jungle);
-}
-
-.bet-details.waiting {
-  font-style: italic;
-  color: #aaa;
-}
-
-.waiting-section {
-  text-align: center;
-  padding: 40px;
-  background: var(--light-grey-background);
-  border-radius: 15px;
-  margin: 20px 0;
-}
-
-.host-controls {
-  margin-top: 20px;
-  text-align: center;
-}
-
-.host-controls .btn-finish:disabled {
-  background-color: #555;
-  cursor: not-allowed;
-  transform: none;
-}
-
-.end-game-actions {
-  display: flex;
-  gap: 20px;
   justify-content: center;
+  flex-wrap: wrap;
 }
-
-.btn-endgame {
-  padding: 12px 25px;
+.btn-confirm,
+.btn-start,
+.btn-primary {
+  background: #27ae60;
+  color: white;
   border: none;
-  border-radius: 8px;
-  font-size: 1.1em;
+  padding: 10px 20px;
+  border-radius: 6px;
   font-weight: bold;
   cursor: pointer;
-  transition: all 0.2s;
+}
+.btn-secondary {
+  background: #7f8c8d;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.rank-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+  border-bottom: 1px solid #eee;
 }
 
-.btn-home {
-  background-color: var(--rust-brown);
-  color: var(--light-text);
-}
-
-.btn-home:hover {
-  background-color: var(--dark-garnet);
-}
-
-.btn-again {
-  background-color: var(--medium-jungle);
-  color: var(--light-text);
-}
-
-.btn-again:hover {
-  background-color: var(--coral-accent);
-  color: var(--light-text);
-}
-
-
-@media (max-width: 768px) {
-  .pmu-board {
-    padding: 20px;
+/* OPTIMISATION MOBILE */
+@media (max-width: 440px) {
+  .game-title {
+    display: none;
   }
-
-  .pmu-title {
-    font-size: 1.8em;
+  .pmu-header {
+    justify-content: center;
   }
-
-  .horse-lane {
-    grid-template-columns: 80px 1fr 50px;
-    padding: 10px;
+  .deck-info {
+    padding-left: 0;
   }
+  /* Si l'écran est très étroit, on réduit l'espace */
+  .board-container {
+    aspect-ratio: 9/18;
+    width: 100%;
+    padding: 2px;
+  }
+}
 
-  .horses-grid {
-    grid-template-columns: repeat(2, 1fr);
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
   }
 }

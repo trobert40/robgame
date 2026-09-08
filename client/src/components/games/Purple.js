@@ -185,7 +185,7 @@ const Purple = ({ gameState }) => {
             <img
               src={getCardImage(gameState.currentCard)}
               alt={`${gameState.currentCard.value} of ${gameState.currentCard.suit}`}
-              className="card-image"
+              className="card-image-purple"
             />
           ) : (
             <div className="card empty">

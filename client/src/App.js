@@ -42,11 +42,7 @@ function AppContent() {
           className="chat-visibility-toggle"
         >
           <img
-            src={`${
-              isChatVisible
-                ? "https://raw.githubusercontent.com/trobert40/robgame/refs/heads/main/client/public/assets/Eye-slash"
-                : "https://raw.githubusercontent.com/trobert40/robgame/refs/heads/main/client/public/assets/Eye-open"
-            }.png`}
+            src={`/assets/chat-button.png`}
             alt="Toggle Chat"
           />
         </button>

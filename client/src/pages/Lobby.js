@@ -51,6 +51,10 @@ export const Lobby = () => {
     startGame("purple");
   };
 
+  const handleStart99 = () => {
+    startGame("99");
+  };
+
   const handleLeaveLobby = () => {
     setShowConfirmModal(true);
   };
@@ -161,17 +165,22 @@ export const Lobby = () => {
                 <img src="/assets/jeux/pmu.png" alt="PMU Game" />
                 <span className="game-title">PMU</span>
               </button>
-
-              <div className="games-grid">
-                <button
-                  onClick={handleStartPurple}
-                  className="game-card-button"
-                  disabled={isGameInProgress}
-                >
-                  <img src="/assets/jeux/purple.png" alt="Purple Game" />
-                  <span className="game-title">Purple</span>
-                </button>
-              </div>
+              <button
+                onClick={handleStartPurple}
+                className="game-card-button"
+                disabled={isGameInProgress}
+              >
+                <img src="/assets/jeux/purple.png" alt="Purple Game" />
+                <span className="game-title">Purple</span>
+              </button>
+              <button
+                onClick={handleStart99}
+                className="game-card-button"
+                disabled={isGameInProgress}
+              >
+                <img src="/assets/jeux/99.png" alt="99 Game" />
+                <span className="game-title">99</span>
+              </button>
             </div>
           </div>
         )}

@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useSocket } from "../hooks/useSocket";
 import PMU from "../components/games/PMU";
 import Purple from "../components/games/Purple";
+import NinetyNine from "../components/games/99";
 import { Chat } from "../components/Chat";
 import ConfirmationModal from "../components/ConfirmationModal";
 import "./Game.css";
@@ -57,6 +58,7 @@ export const Game = () => {
       />
       {gameType === "pmu" && <PMU gameState={roomData.gameState} />}
       {gameType === "purple" && <Purple gameState={roomData.gameState} />}
+      {gameType === "99" && <NinetyNine gameState={roomData.gameState} />}
       <Chat />
     </div>
   );
