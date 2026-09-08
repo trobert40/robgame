@@ -1,274 +1,254 @@
-# 📚 Documentation Technique - App Jeux Soirée
+# 📚 Documentation Technique - RobGame (App Jeux Soirée)
 
 ## Architecture Globale
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                     NAVIGATEUR (Client)                      │
-│  ┌──────────────────────────────────────────────────────┐   │
-│  │              React Application (Port 3000)            │   │
-│  │  ┌─────────────────────────────────────────────────┐ │   │
-│  │  │ Pages: Home, Lobby, Game                        │ │   │
-│  │  │ Components: PMU, Purple                         │ │   │
-│  │  └─────────────────────────────────────────────────┘ │   │
-│  └──────────────────────────────────────────────────────┘   │
-│                         ↕ Socket.io ↕                       │
-└─────────────────────────────────────────────────────────────┘
-           ↓
-┌─────────────────────────────────────────────────────────────┐
-│              Node.js Server (Port 3001)                      │
-│  ┌──────────────────────────────────────────────────────┐   │
-│  │              Socket.io Server                        │   │
-│  │  • Gestion des connexions                           │   │
-│  │  • Routage des événements                           │   │
-│  │  • Synchronisation d'état                           │   │
-│  └──────────────────────────────────────────────────────┘   │
-│  ┌──────────────────────────────────────────────────────┐   │
-│  │              GameRoom Manager                        │   │
-│  │  • Création/gestion des salons                      │   │
-│  │  • Gestion des joueurs                              │   │
-│  └──────────────────────────────────────────────────────┘   │
-│  ┌──────────────────────────────────────────────────────┐   │
-│  │              Game Engines                            │   │
-│  │  • PMUGame                                           │   │
-│  │  • PurpleGame                                        │   │
-│  └──────────────────────────────────────────────────────┘   │
-│  ┌──────────────────────────────────────────────────────┐   │
-│  │              Utilities                               │   │
-│  │  • CardUtils (Deck, Card)                           │   │
-│  └──────────────────────────────────────────────────────┘   │
-└─────────────────────────────────────────────────────────────┘
+┌─────────────────────────────────────────────────────────────────────────┐
+│                          NAVIGATEUR (Client React)                      │
+│  ┌───────────────────────────────────────────────────────────────────┐  │
+│  │                     React Application (Port 3000)                 │  │
+│  │  ┌─────────────────────────────────────────────────────────────┐  │  │
+│  │  │ Pages: Home, Lobby, Game                                    │  │  │
+│  │  │ Jeux: PMU, Purple, NinetyNine (99)                          │  │  │
+│  │  │ UI: Chat, PenaltyModal, ConfirmationModal, ToggleSwitch...  │  │  │
+│  │  └─────────────────────────────────────────────────────────────┘  │  │
+│  └───────────────────────────────────────────────────────────────────┘  │
+│                               ↕ WebSockets / Socket.io ↕                │
+└─────────────────────────────────────────────────────────────────────────┘
+                                   ↓
+┌─────────────────────────────────────────────────────────────────────────┐
+│                    SERVEUR (Node.js / Express / Socket.io)              │
+│  ┌───────────────────────────────────────────────────────────────────┐  │
+│  │                        Socket.io Server                           │  │
+│  │  • Gestion des connexions & déconnexions                          │  │
+│  │  • Routage des événements (partie, chat, pénalités)               │  │
+│  │  • Synchronisation d'état broadcast                              │  │
+│  └───────────────────────────────────────────────────────────────────┘  │
+│  ┌───────────────────────────────────────────────────────────────────┐  │
+│  │                       GameRoom Manager                            │  │
+│  │  • Création & gestion des salons (codes uniques à 6 caractères)   │  │
+│  │  • Salons publics / privés & réassignation d'hôte                 │  │
+│  │  • Cycle de vie (waiting -> rules -> playing -> finished)         │  │
+│  └───────────────────────────────────────────────────────────────────┘  │
+│  ┌───────────────────────────────────────────────────────────────────┐  │
+│  │                         Game Engines                              │  │
+│  │  • PMUGame (course de chevaux, paris, barrières de recul)         │  │
+│  │  • PurpleGame (prédictions couleur, empilement de cartes)         │  │
+│  │  • NinetyNineGame (compteur 99, cartes spéciales, élimination)    │  │
+│  └───────────────────────────────────────────────────────────────────┘  │
+│  ┌───────────────────────────────────────────────────────────────────┐  │
+│  │                          Utilities                                │  │
+│  │  • CardUtils (Classes Card et Deck, mélange, valeurs)             │  │
+│  └───────────────────────────────────────────────────────────────────┘  │
+└─────────────────────────────────────────────────────────────────────────┘
 ```
+
+---
 
 ## Structure des Dossiers
 
 ```
 app-jeux-soiree/
-├── server/
-│   ├── index.js                  # Point d'entrée du serveur
-│   ├── GameRoom.js               # Classe de gestion des salons
-│   ├── games/
-│   │   ├── PMUGame.js            # Logique du jeu PMU
-│   │   └── PurpleGame.js         # Logique du jeu Purple
-│   └── utils/
-│       └── CardUtils.js          # Classes Card et Deck
+├── server/                           # Backend Node.js
+│   ├── index.js                      # Point d'entrée, Express, Socket.IO & API
+│   ├── GameRoom.js                   # Gestionnaire de salon et des joueurs
+│   ├── games/                        # Moteurs de règles de jeu
+│   │   ├── PMUGame.js                # Logique du PMU (course et paliers)
+│   │   ├── PurpleGame.js             # Logique du Purple
+│   │   └── 99Game.js                 # Logique du jeu 99
+│   ├── utils/
+│   │   └── CardUtils.js              # Classes Deck et Card
+│   └── test_*.js                     # Scripts de tests unitaires (PMU, classements)
 │
-├── client/
+├── client/                           # Frontend React (SPA)
 │   ├── public/
-│   │   └── index.html            # Template HTML
+│   │   ├── assets/                   # Cartes SVG, icônes, logo, boutons
+│   │   │   └── jeux/                 # Miniatures des jeux (pmu.png, purple.png, 99.png...)
+│   │   ├── CNAME                     # Configuration domaine personnalisé (robgame.fr)
+│   │   └── index.html                # Template HTML
 │   └── src/
-│       ├── pages/
-│       │   ├── Home.js           # Écran d'accueil
-│       │   ├── Home.css
-│       │   ├── Lobby.js          # Écran de salle
-│       │   ├── Lobby.css
-│       │   ├── Game.js           # Écran de jeu
-│       │   └── Game.css
-│       ├── components/
-│       │   └── games/
-│       │       ├── PMU.js        # Composant PMU
-│       │       ├── PMU.css
-│       │       ├── Purple.js     # Composant Purple
-│       │       └── Purple.css
+│       ├── components/               # Composants transversaux
+│       │   ├── Chat.js / Chat.css    # Messagerie instantanée en temps réel
+│       │   ├── PenaltyModal.js       # Fenêtre surgissante des pénalités / gorgées
+│       │   ├── ConfirmationModal.js  # Modale de confirmation (quitter la partie)
+│       │   ├── MessagePopup.js       # Notification toast si le chat est replié
+│       │   ├── ToggleSwitch.js       # Switch UI (Privé / Public)
+│       │   └── games/                # Composants graphiques des jeux
+│       │       ├── PMU.js / PMU.css
+│       │       ├── Purple.js / Purple.css
+│       │       └── 99.js / 99.css
 │       ├── contexts/
-│       │   └── SocketContext.js  # Context Socket.io
+│       │   └── SocketContext.js      # Contexte global Socket.io & état partagé
 │       ├── hooks/
-│       │   └── useSocket.js      # Hook Socket.io
-│       ├── App.js                # App principal
-│       ├── App.css
-│       └── index.js              # Entrée React
+│       │   └── useSocket.js          # Hook consommateur du contexte Socket
+│       ├── pages/
+│       │   ├── Home.js / Home.css    # Accueil (créer, rejoindre, liste publique)
+│       │   ├── Lobby.js / Lobby.css  # Salle d'attente (joueurs, choix de jeu)
+│       │   └── Game.js / Game.css    # Conteneur dynamique de partie
+│       ├── App.js                    # Composant racine, routes et modales globales
+│       └── index.js                  # Point de montage ReactDOM
 │
-├── package.json                  # Dépendances serveur
-├── README.md                     # Guide utilisateur
-└── ARCHITECTURE.md              # Ce fichier
+├── docs/                             # Build de production servi par GitHub Pages (robgame.fr)
+├── commandes.txt                     # Commandes de build, synchronisation et Git
+├── CHANGELOG.md                      # Journal des versions
+└── ARCHITECTURE.md                  # Ce document
 ```
+
+---
 
 ## Flux de Données
 
 ### 1. Création d'une Partie
 ```
-Utilisateur clique "Créer une partie"
+Utilisateur entre son pseudo et clique "Créer une partie"
     ↓
-[Home.js] envoie event 'createRoom'
+[Home.js] émet 'createRoom(playerName)'
     ↓
-[Socket.io] reçoit et traite
+[server/index.js] valide le pseudo et instancie new GameRoom(code, playerName, socket.id)
     ↓
-[GameRoom.js] crée une nouvelle salle
+Salon stocké dans la Map `rooms` en mémoire
     ↓
-Redirection vers /lobby
+Callback renvoyé au client avec roomCode et roomData
     ↓
-[Lobby.js] affiche code + QR code
+[SocketContext.js] met à jour l'état local et redirige vers /lobby
 ```
 
-### 2. Rejoindre une Partie
+### 2. Rejoindre une Partie (Code ou Liste Publique)
 ```
-Utilisateur entre code/scanne QR
+Utilisateur saisit un code à 6 lettres OU clique sur un salon public
     ↓
-[Home.js] envoie event 'joinRoom'
+[Home.js] émet 'joinRoom(roomCode, playerName)'
     ↓
-[Socket.io] valide la salle
+[server/index.js] vérifie l'existence et la capacité du salon (max 8 joueurs)
     ↓
-[GameRoom.js] ajoute le joueur
+[GameRoom.js] ajoute le joueur à la liste
     ↓
-Redirection vers /lobby
+Broadcast 'playerJoined' à tous les membres du salon
     ↓
-[Lobby.js] affiche la salle avec tous les joueurs
+Redirection vers /lobby avec affichage en direct des joueurs et avatars Robohash
 ```
 
 ### 3. Démarrage d'une Partie
 ```
-Host clique sur un jeu (PMU/Purple)
+L'hôte clique sur un jeu ('pmu', 'purple' ou '99')
     ↓
-[Lobby.js] envoie event 'startGame'
+[Lobby.js] émet 'startGame(gameType)'
     ↓
-[Socket.io] instancie le game engine
+[server/index.js] valide que le demandeur est bien l'hôte
     ↓
-[GameRoom.js] crée PMUGame ou PurpleGame
+[GameRoom.js] instancie le moteur correspondant (PMUGame, PurpleGame ou NinetyNineGame)
     ↓
-Redirection vers /game
+Broadcast 'gameStarted' à tous les clients du salon
     ↓
-[Game.js] affiche le composant approprié
+[Game.js] monte dynamiquement le composant de jeu adapté
 ```
 
-### 4. Action de Jeu
+### 4. Actions de Jeu & Synchronisation
 ```
-Joueur effectue une action
+Joueur effectue un coup (pari, carte jouée, prédiction)
     ↓
-[PMU.js] ou [Purple.js] envoie 'gameAction'
+Le composant de jeu émet 'gameAction(action)'
     ↓
-[Game Engine] traite l'action
+[server/index.js] valide les paramètres côté serveur
     ↓
-État du jeu mis à jour
+Le Game Engine traite l'action et mute l'état interne
     ↓
-'gameStateUpdated' envoyé à tous les clients
+Si pénalité générée -> Émission ciblée 'penalty_received' au joueur concerné
     ↓
-Interface mise à jour en temps réel
+Broadcast 'gameStateUpdated' à toute la room avec le nouvel état complet
+    ↓
+L'interface React se re-rend automatiquement
 ```
+
+### 5. Chat en Direct
+```
+Joueur saisit un message et valide
+    ↓
+[Chat.js] émet 'sendMessage(text)'
+    ↓
+[server/index.js] horodate et associe l'expéditeur et son avatar
+    ↓
+Broadcast 'newMessage' à la room
+    ↓
+Affichage dans le chat OU sous forme de notification flottante (MessagePopup) si replié
+```
+
+---
 
 ## API Socket.io
 
 ### Client → Server
 
-#### createRoom
-```javascript
-socket.emit('createRoom', playerName, callback)
-```
-**Params:**
-- `playerName` (string): Nom du joueur
+| Événement | Paramètres | Description |
+| :--- | :--- | :--- |
+| `createRoom` | `playerName` *(string)*, `callback` | Crée un nouveau salon avec un code unique de 6 lettres |
+| `joinRoom` | `roomCode` *(string)*, `playerName` *(string)*, `callback` | Rejoint un salon existant |
+| `getPublicRooms` | `callback` | Récupère la liste des salons publics disponibles |
+| `updateRoomPrivacy` | `isPrivate` *(boolean)* | Bascule la confidentialité du salon (réservé à l'hôte) |
+| `startGame` | `gameType` *(string)*, `callback` | Démarre un jeu (`'pmu'`, `'purple'`, `'99'`) |
+| `gameAction` | `action` *(object)*, `callback` | Transmet une action de jeu au moteur en cours |
+| `sendMessage` | `message` *(string)*, `callback` | Envoie un message dans le chat du salon |
+| `playAgain` | `callback` | Remet le salon en état d'attente (lobby) pour relancer une partie |
+| `leaveRoom` | `callback` | Quitte proprement le salon (réassigne l'hôte si besoin) |
 
-**Response:**
-```javascript
-{
-  success: boolean,
-  roomCode: string,
-  roomData: {
-    code: string,
-    players: Array,
-    gameType: string,
-    status: string
-  }
-}
-```
+#### Détail des `gameAction` selon le jeu :
 
-#### joinRoom
-```javascript
-socket.emit('joinRoom', roomCode, playerName, callback)
-```
-**Params:**
-- `roomCode` (string): Code de la salle
-- `playerName` (string): Nom du joueur
+* **PMU** :
+  * `{ type: 'placeBet', suit: 'hearts'|'diamonds'|'clubs'|'spades', amount: number }`
+  * `{ type: 'startRace' }` (hôte uniquement)
+  * `{ type: 'drawCard' }`
+* **Purple** :
+  * `{ type: 'predict', prediction: 'rouge'|'noir'|'purple' }`
+  * `{ type: 'pass' }` (si au moins 2 réussites consécutives)
+* **99** :
+  * `{ type: 'playCard', card: Object, chosenValue?: number }` (pour l'As : 1 ou 11 ; pour le Valet : 10 ou -10)
+  * `{ type: 'viewCount' }` (déclenche 1 gorgée de pénalité)
 
-#### startGame
-```javascript
-socket.emit('startGame', gameType)
-```
-**Params:**
-- `gameType` (string): 'pmu' ou 'purple'
-
-#### gameAction
-```javascript
-socket.emit('gameAction', action, callback)
-```
-**Params (PMU):**
-```javascript
-{
-  type: 'placeBet',
-  suit: 'hearts|diamonds|clubs|spades',
-  amount: number
-}
-// ou
-{
-  type: 'finishBetting'
-}
-// ou
-{
-  type: 'drawCard'
-}
-```
-
-**Params (Purple):**
-```javascript
-{
-  type: 'predict',
-  prediction: 'rouge|noir|purple|plus|moins'
-}
-// ou
-{
-  type: 'pass'
-}
-```
+---
 
 ### Server → Client
 
-#### playerJoined
-```javascript
-io.to(roomCode).emit('playerJoined', {
-  players: Array,
-  message: string
-})
-```
+| Événement | Données reçues | Description |
+| :--- | :--- | :--- |
+| `playerJoined` | `{ roomData, systemMessage }` | Un nouveau joueur a rejoint le salon |
+| `playerLeft` | `{ roomData, systemMessage }` | Un joueur a quitté le salon |
+| `roomStateUpdated`| `roomData` | Mise à jour générale du salon (confidentialité, reset) |
+| `gameStarted` | `{ gameType, roomData }` | La partie commence, déclenche la navigation vers `/game` |
+| `gameStateUpdated`| `roomData` | État complet du jeu mis à jour après une action |
+| `penalty_received`| `{ penalties: Array }` | Notifie le joueur qu'il doit boire ou distribuer des gorgées |
+| `newMessage` | `{ id, senderId, senderName, text, timestamp }` | Réception d'un message de chat |
 
-#### playerLeft
-```javascript
-io.to(roomCode).emit('playerLeft', {
-  players: Array
-})
-```
+---
 
-#### gameStarted
-```javascript
-io.to(roomCode).emit('gameStarted', {
-  gameType: string,
-  roomData: Object
-})
-```
-
-#### gameStateUpdated
-```javascript
-io.to(roomCode).emit('gameStateUpdated', gameState)
-```
-
-## État du Jeu (Game State)
+## Modèles d'État (Game State)
 
 ### PMU Game State
 ```javascript
 {
-  stage: 'betting|racing|finished',
+  stage: 'betting' | 'racing' | 'finished',
   players: [
     {
       id: string,
       name: string,
       isHost: boolean,
-      bets: { hearts: 0, diamonds: 0, clubs: 0, spades: 0 },
-      gorgeesToDistribute: number,
-      gorgeesToPay: number
+      hasBet: boolean,
+      bets: { [suit]: amount }
     }
   ],
   horses: {
-    hearts: { suit: string, position: number, cardsDrawn: number },
-    // ...
+    hearts: { suit: 'hearts', currentPosition: number },   // 0 à 6
+    diamonds: { suit: 'diamonds', currentPosition: number },
+    clubs: { suit: 'clubs', currentPosition: number },
+    spades: { suit: 'spades', currentPosition: number }
   },
-  winnerSuit: string|null,
+  sideCards: [
+    { id: number, suit: string, value: string, revealed: boolean } // 5 paliers
+  ],
+  raceRanking: [
+    { suit: string, rank: number } // 1er à 4e
+  ],
+  lastDrawnCard: Card | null,
+  allPlayersHaveBet: boolean,
   cardsRemaining: number,
   history: Array
 }
@@ -277,35 +257,62 @@ io.to(roomCode).emit('gameStateUpdated', gameState)
 ### Purple Game State
 ```javascript
 {
-  stage: 'playing|finished',
+  stage: 'playing' | 'finished',
   players: [
     {
       id: string,
       name: string,
       isHost: boolean,
-      stackedCards: Array,
+      stackedCards: Array<Card>,
       penalties: number,
       isCurrentPlayer: boolean
     }
   ],
   currentPlayer: Object,
-  currentCard: Card|null,
-  previousCard: Card|null,
+  currentCard: Card | null,
+  previousCard: Card | null,
   cardsRemaining: number,
   consecutiveCorrect: number,
+  canPass: boolean,
   history: Array
 }
 ```
+
+### NinetyNine (99) Game State
+```javascript
+{
+  stage: 'playing' | 'finished',
+  players: [
+    {
+      id: string,
+      name: string,
+      isHost: boolean,
+      hand: Array<Card>,
+      cardCount: number
+    }
+  ],
+  count: number,                 // Total cumulé (0 à 99+)
+  currentPlayerIndex: number,
+  gameDirection: 1 | -1,         // Sens horaire ou inversé (Dame)
+  loser: Object | null,          // Joueur ayant fait dépasser 99
+  lastActionMessage: string,     // Feedback textuel de la dernière action
+  lastPlayedCard: Card | null,   // Dernière carte posée au centre
+  cardsRemaining: number,
+  history: Array
+}
+```
+
+---
 
 ## Modèles de Données
 
 ### Card
 ```javascript
 {
-  suit: 'hearts'|'diamonds'|'clubs'|'spades',
-  value: 'A'|'2'-'10'|'J'|'Q'|'K',
-  getNumericValue(): number,     // 1-13
-  getColor(): 'red'|'black',
+  suit: 'hearts' | 'diamonds' | 'clubs' | 'spades',
+  value: 'A' | '2'-'10' | 'J' | 'Q' | 'K',
+  getNumericValue(): number, // 1 à 13
+  getColor(): 'red' | 'black',
   toString(): string
 }
 ```
@@ -313,81 +320,47 @@ io.to(roomCode).emit('gameStateUpdated', gameState)
 ### GameRoom
 ```javascript
 {
-  code: string,
-  players: Array,
-  game: PMUGame|PurpleGame|null,
-  gameType: string|null,
-  status: 'waiting'|'rules'|'playing'|'finished',
-  maxPlayers: number
+  code: string,                  // 6 lettres majuscules
+  players: Array<Player>,
+  game: PMUGame | PurpleGame | NinetyNineGame | null,
+  gameType: 'pmu' | 'purple' | '99' | null,
+  status: 'waiting' | 'rules' | 'playing' | 'finished',
+  maxPlayers: 8,
+  isPrivate: boolean
 }
 ```
 
-## Flux d'Authentification
+---
 
-Actuellement, il n'y a pas d'authentification. Chaque joueur est identifié par:
-- `socket.id` (généré par Socket.io)
-- `playerName` (défini par l'utilisateur)
+## Déploiement & Environnement
 
-Pour une production, considérez:
-- JWT tokens
-- Base de données utilisateurs
-- Validation de session
+### Production
+* **Frontend** : Hébergé sur **GitHub Pages** via le dossier `/docs/`.
+  * Domaine personnalisé : `https://robgame.fr` (fichier `CNAME` injecté automatiquement depuis `client/public/CNAME`).
+* **Backend** : Hébergé sur un serveur VPS distant (ou conteneur Docker).
+  * URL API : `https://api.robgame.fr`.
+  * Reverse proxy HTTPS configuré avec redirection WebSockets `/socket.io`.
 
-## Considérations de Performance
-
-### Optimisations Actuelles:
-- State synchronization via WebSockets
-- Broadcast limité à la room spécifique
-- Card shuffling une seule fois par partie
-
-### Améliorations Futures:
-- Compression des messages Socket.io
-- Caching du QR code généré
-- Limite de débit des actions (rate limiting)
-- Pagination de l'historique
-
-## Sécurité
-
-### Actuellement Implémenté:
-- CORS activé
-- Validation de room code
-- Vérification des joueurs actifs
-
-### À Ajouter:
-- Rate limiting
-- Input validation/sanitization
-- Message encryption
-- Code injection prevention
-- DDoS protection
-
-## Évolutivité
-
-### Limitée à:
-- Un serveur unique
-- Base de données en mémoire
-
-### Pour Scale Horizontalement:
-1. Adapter Room Store (Redis)
-2. Ajouter Load Balancer
-3. Session persistence
-4. Adapter Socket.io adapter (Redis adapter)
-
-## Déploiement
-
-### Heroku
-```bash
-heroku create app-jeux-soiree
-git push heroku main
-```
-
-### Docker
-```bash
-docker build -t app-jeux-soiree .
-docker run -p 3001:3001 app-jeux-soiree
-```
+### Développement Local
+* **Client** : `http://localhost:3000` (démarré avec `npm run dev:client` ou `npm run dev`).
+* **Serveur** : `http://localhost:3001` (démarré avec `nodemon server/index.js`).
+* Détection automatique de l'URL dans `SocketContext.js` :
+  ```javascript
+  const SERVER_URL = window.location.hostname === "localhost"
+    ? "http://localhost:3001"
+    : "https://api.robgame.fr";
+  ```
 
 ### Variables d'Environnement
-```
-PORT=3001
-NODE_ENV=production
-```
+* Fichier `.env.development` :
+  ```env
+  PORT=3001
+  NODE_ENV=development
+  REACT_APP_SERVER_URL=http://localhost:3001
+  ```
+* Fichier `.env.production` :
+  ```env
+  PORT=3001
+  NODE_ENV=production
+  REACT_APP_SERVER_URL=https://api.robgame.fr
+  ```
