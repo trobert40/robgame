@@ -9,7 +9,7 @@ import ConfirmationModal from "../components/ConfirmationModal";
 import "./Game.css";
 
 export const Game = () => {
-  const { roomData, backToLobby, socket } = useSocket();
+  const { roomData, backToLobby } = useSocket();
   const navigate = useNavigate();
   const [showConfirmModal, setShowConfirmModal] = useState(false);
 

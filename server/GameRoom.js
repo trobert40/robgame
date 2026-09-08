@@ -1,5 +1,6 @@
 const PMUGame = require("./games/PMUGame");
 const PurpleGame = require("./games/PurpleGame");
+const NinetyNineGame = require("./games/99Game");
 
 class GameRoom {
   constructor(code, hostName, hostId, isPrivate = true) {
@@ -70,13 +71,17 @@ class GameRoom {
   }
 
   startGame(gameType) {
-    this.gameType = gameType;
+    const normalizedType =
+      typeof gameType === "string" ? gameType.toLowerCase() : "";
+    this.gameType = normalizedType;
     this.status = "rules";
 
-    if (gameType === "pmu") {
+    if (normalizedType === "pmu") {
       this.game = new PMUGame(this.players);
-    } else if (gameType === "purple") {
+    } else if (normalizedType === "purple") {
       this.game = new PurpleGame(this.players);
+    } else if (normalizedType === "99") {
+      this.game = new NinetyNineGame(this.players);
     }
 
     this.status = "playing";

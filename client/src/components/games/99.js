@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSocket } from "../../hooks/useSocket";
 import "./99.css";
@@ -223,7 +223,9 @@ const NinetyNine = ({ gameState }) => {
           <div className="nn-modal game-over-panel">
             <h2>💥 BOOM ! 💥</h2>
             <div className="loser-display">
-              <span className="loser-name">{gameState.loser.name}</span>
+              <span className="loser-name">
+                {gameState.loser?.name || "Un joueur"}
+              </span>
               <p>a dépassé 99 !</p>
             </div>
             <div className="final-count">Total: {gameState.count}</div>

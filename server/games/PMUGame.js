@@ -5,44 +5,49 @@ class PMUGame {
     this.players = players.map(p => ({
       ...p,
       bets: {}, // { suit: amount }
-      penalties: [], // Array of penalty objects { type: 'drink'/'distribute', amount: X }
       hasBet: false,
     }));
 
     this.deck = new Deck();
-    // Remove Aces as they are not used for horse progression
-    this.deck.cards = this.deck.cards.filter(card => !['A'].includes(card.value));
+    // The 4 Aces are the horses, not in the deck
+    this.deck.cards = this.deck.cards.filter(card => card.value !== 'A');
+    
+    // Draw 5 cards for the side barriers
+    this.sideCards = [];
+    for (let i = 0; i < 5; i++) {
+        const card = this.deck.draw();
+        if (card) {
+            this.sideCards.push({ ...card, revealed: false, id: i + 1 });
+        }
+    }
+    // Side cards are ordered from bottom to top (step 1 to 5)
+    // We will check them in order.
 
     this.horses = {
-      hearts: { suit: 'hearts', cardsDrawn: 0 },
-      diamonds: { suit: 'diamonds', cardsDrawn: 0 },
-      clubs: { suit: 'clubs', cardsDrawn: 0 },
-      spades: { suit: 'spades', cardsDrawn: 0 }
+      hearts: { suit: 'hearts', currentPosition: 0 },
+      diamonds: { suit: 'diamonds', currentPosition: 0 },
+      clubs: { suit: 'clubs', currentPosition: 0 },
+      spades: { suit: 'spades', currentPosition: 0 }
     };
 
-    this.stage = 'betting'; // betting, race-starting, racing, finished
+    this.stage = 'betting'; // betting, racing, finished
     this.raceRanking = [];
+    this.lastDrawnCard = null;
     this.history = [];
   }
 
   placeBet(playerId, suit, amount) {
     const player = this.players.find(p => p.id === playerId);
-    if (!player || player.hasBet) return false;
+    if (!player || player.hasBet || this.stage !== 'betting') return false;
 
-    // For simplicity, let's assume players can bet whatever they want for now
-    // A real implementation might check against a player's available points/drinks
-    player.bets[suit] = (player.bets[suit] || 0) + amount;
+    player.bets = { [suit]: amount }; // Overwrite previous bet if any, simplified logic
     player.hasBet = true;
 
     return true;
   }
 
-  // Host action to start the race after everyone has bet
   startRace() {
-    if (this.stage !== 'betting') return false;
-    
-    const allPlayersHaveBet = this.players.every(p => p.hasBet);
-    if (!allPlayersHaveBet) return false;
+    if (this.stage !== 'betting' || !this.players.every(p => p.hasBet)) return false;
     
     this.stage = 'racing';
     return true;
@@ -50,28 +55,58 @@ class PMUGame {
 
   drawCard() {
     if (this.stage !== 'racing' || this.deck.cardsRemaining() === 0) {
-      // If the deck runs out, end the game with the current ranking
-      this.endGame();
+      if (this.stage === 'racing') this.endGame();
       return null;
     }
 
     const card = this.deck.draw();
+    this.lastDrawnCard = card;
+    this.history.push(card);
     const suit = card.suit;
     
-    if (this.horses[suit]) {
-      this.horses[suit].cardsDrawn += 1;
-      this.history.push(card);
-
-      // Check if a horse has finished the race
-      if (this.horses[suit].cardsDrawn >= 7 && !this.raceRanking.find(r => r.suit === suit)) {
-        this.raceRanking.push({ suit, rank: this.raceRanking.length + 1 });
-      }
-
-      // If all horses have finished, end the game
-      if (this.raceRanking.length === 4) {
-        this.endGame();
-      }
+    // 1. Advance the horse
+    if (this.horses[suit] && this.horses[suit].currentPosition < 6) {
+      this.horses[suit].currentPosition += 1;
     }
+
+    // 2. Check for race finish
+    const unrankedFinishedHorses = Object.values(this.horses).filter(h => 
+        h.currentPosition >= 6 && !this.raceRanking.find(r => r.suit === h.suit)
+    );
+
+    unrankedFinishedHorses.forEach(h => {
+        this.raceRanking.push({ suit: h.suit, rank: this.raceRanking.length + 1 });
+    });
+
+    if (this.raceRanking.length === 4) { // All horses finished
+        this.endGame();
+        return card;
+    }
+
+
+    // 3. Check side cards
+    const minPosition = Math.min(...Object.values(this.horses).map(h => h.currentPosition));
+
+    for (let i = 0; i < this.sideCards.length; i++) {
+        // The steps are 1-based, array is 0-based
+        const step = i + 1;
+        if (minPosition >= step && !this.sideCards[i].revealed) {
+            this.sideCards[i].revealed = true;
+            const penaltySuit = this.sideCards[i].suit;
+            
+            // The corresponding horse moves back one space
+            // Only if the horse hasn't finished yet (currentPosition < 6)
+            if (this.horses[penaltySuit] && this.horses[penaltySuit].currentPosition < 6) {
+                this.horses[penaltySuit].currentPosition = Math.max(0, this.horses[penaltySuit].currentPosition - 1);
+            }
+        }
+    }
+    
+    // Re-check for game end after side card penalties, though it's unlikely to end here.
+    if (Object.values(this.horses).every(h => h.currentPosition >=6) && this.raceRanking.length < 4) {
+        this.endGame();
+    }
+
 
     return card;
   }
@@ -79,39 +114,15 @@ class PMUGame {
   endGame() {
     this.stage = 'finished';
 
-    // If the game ends prematurely, complete the ranking based on cards drawn
+    // Complete the ranking for any horse that hasn't officially crossed the line
     const rankedSuits = this.raceRanking.map(r => r.suit);
     const unrankedHorses = Object.values(this.horses)
       .filter(h => !rankedSuits.includes(h.suit))
-      .sort((a, b) => b.cardsDrawn - a.cardsDrawn); // Sort descending by progress
+      .sort((a, b) => b.currentPosition - a.currentPosition);
     
     unrankedHorses.forEach(h => {
-      this.raceRanking.push({ suit: h.suit, rank: this.raceRanking.length + 1 });
-    });
-
-    // Calculate penalties based on final ranking
-    this.players.forEach(player => {
-      player.penalties = []; // Reset penalties
-      for (const [suit, betAmount] of Object.entries(player.bets)) {
-        const rankInfo = this.raceRanking.find(r => r.suit === suit);
-        if (rankInfo) {
-          switch (rankInfo.rank) {
-            case 1: // 1st place -> Distribute x2
-              player.penalties.push({ type: 'distribute', amount: betAmount * 2, horse: suit });
-              break;
-            case 2: // 2nd place -> Distribute x1
-              player.penalties.push({ type: 'distribute', amount: betAmount, horse: suit });
-              break;
-            case 3: // 3rd place -> Drink x1
-              player.penalties.push({ type: 'drink', amount: betAmount, horse: suit });
-              break;
-            case 4: // 4th place -> Drink x2
-              player.penalties.push({ type: 'drink', amount: betAmount * 2, horse: suit });
-              break;
-            default:
-              break;
-          }
-        }
+      if (!this.raceRanking.find(r => r.suit === h.suit)) {
+        this.raceRanking.push({ suit: h.suit, rank: this.raceRanking.length + 1 });
       }
     });
   }
@@ -124,14 +135,15 @@ class PMUGame {
         name: p.name,
         isHost: p.isHost,
         hasBet: p.hasBet,
-        bets: p.bets,
-        penalties: p.penalties,
+        bets: p.bets, // Keep bets simple for the new frontend
       })),
       horses: this.horses,
+      sideCards: this.sideCards,
       raceRanking: this.raceRanking,
+      lastDrawnCard: this.lastDrawnCard,
       allPlayersHaveBet: this.players.every(p => p.hasBet),
       cardsRemaining: this.deck.cardsRemaining(),
-      history: this.history
+      history: this.history.slice(-5) // Send only the last 5 events
     };
   }
 
@@ -144,13 +156,11 @@ class PMUGame {
         this.placeBet(playerId, action.suit, action.amount);
         break;
       case 'startRace':
-        // Only host can start the race
         if (player.isHost) {
           this.startRace();
         }
         break;
       case 'drawCard':
-        // In this version, anyone can draw, but could be restricted to current player if needed
         this.drawCard();
         break;
     }

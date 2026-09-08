@@ -151,7 +151,7 @@ io.on("connection", (socket) => {
 
   // Start game
   socket.on("startGame", (gameType, callback) => {
-    if (!["PMU", "Purple", "pmu", "purple"].includes(gameType)) {
+    if (!["PMU", "Purple", "pmu", "purple", "99"].includes(gameType)) {
       return (
         callback && callback({ success: false, error: "Invalid game type." })
       );
@@ -176,7 +176,7 @@ io.on("connection", (socket) => {
       roomData: room.getState(),
     });
     console.log(
-      `Game ${gameType} started in room ${socket.currentRoom} by host ${socket.id}`
+      `Game ${gameType} started in room ${socket.currentRoom} by host ${socket.id}`,
     );
     if (callback) callback({ success: true, roomData: room.getState() });
   });
@@ -214,6 +214,12 @@ io.on("connection", (socket) => {
           isValid = false;
         }
       }
+    } else if (gameType === "NinetyNineGame") {
+      if (!["playCard", "viewCount"].includes(action.type)) {
+        isValid = false;
+      } else if (action.type === "playCard" && !action.card) {
+        isValid = false;
+      }
     }
 
     if (!isValid) {
@@ -236,12 +242,18 @@ io.on("connection", (socket) => {
             penalties: [{ amount: actionResult.penalty, type: "drink" }],
           });
         }
+      } else if (gameType === "NinetyNineGame") {
+        if (actionResult && actionResult.penalty) {
+          socket.emit("penalty_received", {
+            penalties: [actionResult.penalty],
+          });
+        }
       } else if (gameType === "PMUGame") {
         if (
-          updatedRoomState.game.stage === "finished" &&
+          updatedRoomState.gameState.stage === "finished" &&
           oldStage !== "finished"
         ) {
-          updatedRoomState.game.players.forEach((player) => {
+          updatedRoomState.gameState.players.forEach((player) => {
             if (player.penalties && player.penalties.length > 0) {
               const playerSocket = io.sockets.sockets.get(player.id);
               if (playerSocket) {

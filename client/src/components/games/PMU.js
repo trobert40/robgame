@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import ReactDOM from "react-dom"; // <--- IMPORT CRUCIAL AJOUTÉ
 import { useNavigate } from "react-router-dom";
 import { useSocket } from "../../hooks/useSocket";
@@ -211,7 +211,7 @@ const PMU = ({ gameState }) => {
           )}
         </div>
       </div>,
-      document.body // Cible du portail
+      document.body, // Cible du portail
     );
   };
 
@@ -272,7 +272,7 @@ const PMU = ({ gameState }) => {
           </div>
         </div>
       </div>,
-      document.body // Cible du portail
+      document.body, // Cible du portail
     );
   };
 

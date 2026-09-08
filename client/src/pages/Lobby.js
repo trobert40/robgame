@@ -21,18 +21,22 @@ export const Lobby = () => {
   const [isPrivate, setIsPrivate] = useState(roomData?.isPrivate || true); // Default to private
 
   useEffect(() => {
-    if (socket) {
-      socket.on("gameStarted", (data) => {
-        navigate("/game");
-      });
-    }
+    if (!socket) return;
+    const handleGameStarted = () => {
+      navigate("/game");
+    };
+    socket.on("gameStarted", handleGameStarted);
+    return () => {
+      socket.off("gameStarted", handleGameStarted);
+    };
   }, [socket, navigate]);
 
+  const isRoomPrivate = roomData?.isPrivate;
   useEffect(() => {
-    if (roomData && typeof roomData.isPrivate === "boolean") {
-      setIsPrivate(roomData.isPrivate);
+    if (typeof isRoomPrivate === "boolean") {
+      setIsPrivate(isRoomPrivate);
     }
-  }, [roomData?.isPrivate]);
+  }, [isRoomPrivate]);
 
   if (!roomData) {
     return <div className="loading">Chargement...</div>;

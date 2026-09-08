@@ -18,7 +18,6 @@ function AppContent() {
   const {
     penalty,
     closePenaltyModal,
-    isChatVisible,
     toggleChatVisibility,
     currentRoom,
     popupMessage,
@@ -41,10 +40,7 @@ function AppContent() {
           onClick={toggleChatVisibility}
           className="chat-visibility-toggle"
         >
-          <img
-            src={`/assets/chat-button.png`}
-            alt="Toggle Chat"
-          />
+          <img src={`/assets/chat-button.png`} alt="Toggle Chat" />
         </button>
       )}
     </>

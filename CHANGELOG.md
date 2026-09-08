@@ -2,9 +2,31 @@
 
 Tous les changements notables de ce projet seront documentés dans ce fichier.
 
+## [1.1.0] - 2026-09-08
+
+### Ajouté
+
+- 🃏 **Nouveau jeu : Le 99**
+  - Compteur interactif avec compteur masqué (pénalité œil)
+  - Cartes spéciales : As (+1/+11), Valet (+10/-10), Dame (inversion de sens), Roi (compteur à 70)
+  - Élimination / explosion au-delà de 99
+- 💬 **Système de Chat en direct** dans le lobby et en cours de partie
+- 🐎 **Refonte graphique du PMU** :
+  - Plateau vertical de style casino avec paliers latéraux
+  - Recul automatique des chevaux selon les cartes de pénalités révélées
+  - Portails modaux pour les paris et les résultats
+- 🌐 **Configuration domaine personnalisé** : inclusion automatique de `CNAME` (`robgame.fr`) dans les builds
+
+### Amélioré / Corrigé
+
+- Nettoyage complet des avertissements ESLint
+- Sécurisation du routage Socket.IO et des types de jeux
+- Messages d'action du 99 traduits en français
+
 ## [1.0.0] - 2025-12-08
 
 ### Ajouté
+
 - ✨ Application web initiale avec React
 - 🎮 Jeu PMU (Course de Chevaux)
   - Système de paris avec gorgées
@@ -33,23 +55,27 @@ Tous les changements notables de ce projet seront documentés dans ce fichier.
 ### À Faire (Futures versions)
 
 #### v1.1.0 - Fonctionnalités Sociales
+
 - [ ] Chat en temps réel dans la salle
 - [ ] Profils joueurs basiques
 - [ ] Statistiques de joueur (victoires/défaites)
 - [ ] Système de classement
 
 #### v1.2.0 - Jeux Supplémentaires
+
 - [ ] Jeu 3: Président/Trou du cul
 - [ ] Jeu 4: Bataille navale
 - [ ] Jeu 5: Menteur
 
 #### v1.3.0 - Améliorations UI/UX
+
 - [ ] Thème sombre/clair
 - [ ] Animations plus fluides
 - [ ] Son et vibrations
 - [ ] Emojis personnalisés
 
 #### v2.0.0 - Authentification & Persistance
+
 - [ ] Authentification utilisateur
 - [ ] Sauvegarde des profils
 - [ ] Base de données
@@ -59,6 +85,7 @@ Tous les changements notables de ce projet seront documentés dans ce fichier.
 ### Changements Techniques
 
 #### Stack
+
 - React 18.2
 - Node.js + Express
 - Socket.io 4.5
@@ -66,12 +93,14 @@ Tous les changements notables de ce projet seront documentés dans ce fichier.
 - CSS3 moderne
 
 #### Architecture
+
 - Pattern Context pour état global
 - Custom hooks pour Socket.io
 - Séparation serveur/client
 - Game engines modulaires
 
 ### Limitations Connues
+
 - [ ] Pas de persistance de données (redémarrage = perte de partie)
 - [ ] Pas d'authentification
 - [ ] Un seul serveur (pas de scaling horizontal)
@@ -79,6 +108,7 @@ Tous les changements notables de ce projet seront documentés dans ce fichier.
 - [ ] Pas de chat
 
 ### Sécurité
+
 - ⚠️ CORS ouvert (à restreindre en production)
 - ⚠️ Pas de validation entrée stricte
 - ⚠️ Pas de rate limiting
@@ -87,6 +117,7 @@ Tous les changements notables de ce projet seront documentés dans ce fichier.
 ## [0.1.0] - 2025-12-07 (Template Initial)
 
 ### Ajouté
+
 - Structure du projet
 - Configuration npm
 - Dépendances de base
