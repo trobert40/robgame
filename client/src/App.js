@@ -34,7 +34,7 @@ function AppContent() {
         <Route path="/" element={<Home joinCode={joinCode} />} />
         <Route path="/lobby" element={<Lobby />} />
         <Route path="/game" element={<Game />} />
-        <Route path="/LobbySolo" element={<LobbySolo />} />
+        <Route path="/lobbysolo" element={<LobbySolo />} />
         <Route path="/solo" element={<Solo />} />
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
