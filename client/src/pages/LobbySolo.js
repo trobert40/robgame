@@ -75,15 +75,11 @@ export const LobbySolo = () => {
 
             {/* Exemple d'un futur jeu Solo grisé (désactivé) */}
             <button
+              onClick={() => handleStartGame("solitaire")}
               className="game-card-button"
-              disabled={true}
-              title="Prochainement..."
             >
               <img src="/assets/jeux/solitaire.png" alt="Solitaire" />
-              <span className="game-title">
-                Solitaire <br />
-                <span style={{ fontSize: "0.5em" }}>(Bientôt)</span>
-              </span>
+              <span className="game-title">Solitaire</span>
             </button>
           </div>
         </div>

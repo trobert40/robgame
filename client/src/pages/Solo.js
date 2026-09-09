@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 // Import des jeux solo
 import Demineur from "../components/solo/Minesweeper";
+import Solitaire from "../components/solo/Solitaire";
+
 import ConfirmationModal from "../components/ConfirmationModal";
 import "./Solo.css";
 
@@ -48,7 +50,7 @@ export const Solo = () => {
 
       {/* Affichage conditionnel du jeu selon ce qui a été choisi dans le lobby */}
       {gameType === "minesweeper" && <Demineur />}
-      {/* {gameType === "solitaire" && <Solitaire />} */}
+      {gameType === "solitaire" && <Solitaire />}
     </div>
   );
 };
