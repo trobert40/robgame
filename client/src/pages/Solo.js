@@ -1,29 +1,21 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useSocket } from "../hooks/useSocket";
-import Demineur from "../components/solo/Minesweeper";
-import { Chat } from "../components/Chat";
+// On importe le démineur (attention à la majuscule)
+import Demineur from "../components/games/solo/Minesweeper";
 import ConfirmationModal from "../components/ConfirmationModal";
 import "./Solo.css";
 
 export const Solo = () => {
-  const { roomData, backToLobby } = useSocket();
   const navigate = useNavigate();
   const [showConfirmModal, setShowConfirmModal] = useState(false);
-
-  useEffect(() => {
-    if (roomData && roomData.status === "waiting") {
-      navigate("/lobby");
-    }
-  }, [roomData, navigate]);
 
   const handleLeaveGameClick = () => {
     setShowConfirmModal(true);
   };
 
   const handleConfirmLeave = () => {
-    backToLobby();
-    navigate("/lobby");
+    // Plus besoin de "backToLobby()" côté serveur, on redirige juste l'utilisateur
+    navigate("/lobby"); // ou "/" selon la structure de ton app
     setShowConfirmModal(false);
   };
 
@@ -31,11 +23,8 @@ export const Solo = () => {
     setShowConfirmModal(false);
   };
 
-  //  if (!roomData) {
-  //   return <div className="loading">Chargement du jeu...</div>;
-  // }
-
-  const gameType = roomData.gameType;
+  // On a supprimé le bloc "if (!roomData) return chargement..."
+  // Le jeu se lance instantanément maintenant !
 
   return (
     <div className="game-container">
@@ -48,14 +37,18 @@ export const Solo = () => {
           title="Quitter la partie"
         />
       </div>
+
       <ConfirmationModal
         show={showConfirmModal}
         onClose={handleCloseModal}
         onConfirm={handleConfirmLeave}
         message="Êtes-vous sûr de vouloir quitter la partie ? Vous retournerez au lobby."
       />
-      {gameType === "Démineur" && <Demineur gameState={roomData.gameState} />}
-      <Chat />
+
+      {/* On appelle le composant Démineur directement, sans lui passer de gameState du serveur */}
+      <Demineur />
+
+      {/* J'ai retiré <Chat /> car en mode solo, tu n'as personne avec qui discuter ! */}
     </div>
   );
 };
