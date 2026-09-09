@@ -168,7 +168,7 @@ export const Home = () => {
               <span>OU</span>
             </div>
             <button
-              onClick={() => navigate("/lobbysolo")}
+              onClick={() => navigate("/LobbySolo")}
               className="btn btn-solo"
             >
               🕹️ Mode Solo (Démineur, Solitaire...)
