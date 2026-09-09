@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 // On importe le démineur (attention à la majuscule)
-import Demineur from "../components/games/solo/Minesweeper";
+import Demineur from "../components/solo/Minesweeper";
 import ConfirmationModal from "../components/ConfirmationModal";
 import "./Solo.css";
 
