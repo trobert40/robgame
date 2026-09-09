@@ -1,0 +1,83 @@
+.game-container {
+  /* On utilise fixed pour garantir le plein écran sur mobile sans scrollbar du navigateur */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+
+  /* On remplace Grid par Flex pour que le jeu prenne toute la place restante */
+  display: flex;
+  flex-direction: column;
+
+  /* On enlève le padding global qui écrase le jeu sur mobile */
+  padding: 0;
+
+  background: linear-gradient(
+      0deg,
+      transparent 0%,
+      rgba(132, 123, 255, 0.7) 50%,
+      transparent 100%
+    ),
+    linear-gradient(
+      0deg,
+      rgba(120, 56, 209, 0.8) 0%,
+      rgba(132, 123, 255, 0.5) 100%
+    ),
+    linear-gradient(
+      45deg,
+      rgba(120, 56, 209, 0.5) 0%,
+      rgba(132, 123, 255, 0.5) 100%
+    ),
+    repeating-conic-gradient(
+      rgba(132, 123, 255, 0.5) 0% 2.5%,
+      transparent 2.5% 5%
+    ),
+    repeating-conic-gradient(from 45deg, #8d42f5 0% 25%, #7838d1 0% 50%) 50%/40px
+      40px;
+
+  overflow: hidden; /* Empêche le scroll global, le jeu gère son propre layout */
+}
+
+.player-photo-Game {
+  width: 60px;
+  height: 60px;
+  border-radius: 100%;
+  object-fit: cover;
+}
+
+.player-name-Game {
+  font-size: 1.2em;
+  margin-bottom: 20px;
+}
+
+.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  color: white;
+  font-size: 1.5em;
+  font-weight: 600;
+}
+
+.game-header {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 50; /* Z-index suffisant mais sous les overlays du PMU (9999) */
+}
+
+.back-button {
+  width: 40px; /* Un peu plus petit pour mobile */
+  height: auto;
+  cursor: pointer;
+  transition: transform 0.2s ease-in-out;
+  filter: drop-shadow(
+    0 2px 5px rgba(0, 0, 0, 0.5)
+  ); /* Ombre pour visibilité sur fond chargé */
+}
+
+.back-button:hover {
+  transform: scale(1.1);
+}
