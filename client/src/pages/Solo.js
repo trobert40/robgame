@@ -31,9 +31,9 @@ export const Solo = () => {
     setShowConfirmModal(false);
   };
 
-  if (!roomData) {
-    return <div className="loading">Chargement du jeu...</div>;
-  }
+  //  if (!roomData) {
+  //   return <div className="loading">Chargement du jeu...</div>;
+  // }
 
   const gameType = roomData.gameType;
 
