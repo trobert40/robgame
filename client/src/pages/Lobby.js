@@ -193,7 +193,8 @@ export const Lobby = () => {
             </div>
             {!hasEnoughPlayers && (
               <p className="min-players-warning">
-                ⏳ En attente d'autres joueurs (minimum 2 joueurs requis pour lancer)
+                ⏳ En attente d'autres joueurs (minimum 2 joueurs requis pour
+                lancer)
               </p>
             )}
           </div>

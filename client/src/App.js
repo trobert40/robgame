@@ -11,6 +11,7 @@ import { Home } from "./pages/Home";
 import { Lobby } from "./pages/Lobby";
 import { Game } from "./pages/Game";
 import { Solo } from "./pages/Solo";
+import { LobbySolo } from "./pages/LobbySolo";
 import { MessagePopup } from "./components/MessagePopup";
 import PenaltyModal from "./components/PenaltyModal";
 import "./App.css";
@@ -33,6 +34,7 @@ function AppContent() {
         <Route path="/" element={<Home joinCode={joinCode} />} />
         <Route path="/lobby" element={<Lobby />} />
         <Route path="/game" element={<Game />} />
+        <Route path="/lobbysolo" element={<LobbySolo />} />
         <Route path="/solo" element={<Solo />} />
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>

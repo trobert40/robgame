@@ -93,9 +93,7 @@ export const Home = () => {
               onClick={() => handleJoinRoom(room.roomCode)}
             >
               <span>Salon de {room.hostName}</span>
-              <span>
-                {room.playerCount} joueur(s)
-              </span>
+              <span>{room.playerCount} joueur(s)</span>
             </li>
           ))}
         </ul>
@@ -170,7 +168,7 @@ export const Home = () => {
               <span>OU</span>
             </div>
             <button
-              onClick={() => navigate("/solo")}
+              onClick={() => navigate("//lobbysolo")}
               className="btn btn-solo"
             >
               🕹️ Mode Solo (Démineur, Solitaire...)
@@ -211,4 +209,3 @@ export const Home = () => {
     </div>
   );
 };
-
